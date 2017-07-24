@@ -1,20 +1,16 @@
 # Errors
 
-<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files...just save them to the `includes` folder and add them to the top of your `index.md`'s frontmatter. Files are included in the order listed.</aside>
-
-The Kittn API uses the following error codes:
-
+In general, the Splitwise API returns the following error codes:
 
 Error Code | Meaning
 ---------- | -------
-400 | Bad Request -- Your request sucks.
-401 | Unauthorized -- Your API key is wrong.
-403 | Forbidden -- The kitten requested is hidden for administrators only.
-404 | Not Found -- The specified kitten could not be found.
-405 | Method Not Allowed -- You tried to access a kitten with an invalid method.
-406 | Not Acceptable -- You requested a format that isn't json.
-410 | Gone -- The kitten requested has been removed from our servers.
-418 | I'm a teapot.
-429 | Too Many Requests -- You're requesting too many kittens! Slow down!
-500 | Internal Server Error -- We had a problem with our server. Try again later.
-503 | Service Unavailable -- We're temporarily offline for maintenance. Please try again later.
+400 | Bad Request. Something about the request was invalid, and you will probably need to change your request before trying again.
+401 | Unauthorized. You are not logged in — your OAuth authentication may not be configured correctly.
+403 | Forbidden. The current user is not allowed to perform this action.
+404 | Not Found. The endpoint that you were trying to call does not exist.
+500 | Internal Server Error. Our server had an unexpected error while trying to process your request. This may be a temporary problem, or there may be a problem with your request that is causing the server to crash.
+503 | Service Unavailable. We're temporarily offline for maintenance. Please try again later.
+
+In addition, even when a call is successful and returns a `200 OK` HTTP response, the body of the response may include a key called `error` or `errors`. This is usually used to communicate validation errors. For example, if you submit an expense without any cost, we may return an `errors` key as part of the JSON response.
+
+The format of these errors is somewhat inconsistent, unfortunately. We're working on standardizing it, but it's a work in progress.

@@ -2,238 +2,68 @@
 title: Splitwise API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - shell
   - ruby
-  - python
-  - javascript
 
 toc_footers:
   - <a href='https://secure.splitwise.com/apps'>Sign up for an API key</a>
   - <a href='https://github.com/lord/slate'>Documentation powered by Slate</a>
 
 includes:
+  - users
+  - groups
+  - friends
+  - expenses
+  - comments
+  - notifications
+  - other
   - errors
+  - terms_of_use
 
 search: true
 ---
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
-
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
-
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
+Hey there! We're glad you're interested in the Splitwise API. This documentation will help you to fetch information on users, expenses, groups, and much more.
 
 # Authentication
 
-> To authorize, use this code:
-
 ```ruby
-require 'kittn'
+require 'oauth'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
+client = OAuth2::Client.new(
+  'consumer_key',
+  'consumer_secret',
+  site: 'http://localhost.com:3000/'
+)
+client.auth_code.authorize_url(
+  redirect_uri: 'http://localhost:8080/oauth2/callback'
+)
+# => "https://example.org/oauth/authorization?response_type=code&client_id=consumer_key&redirect_uri=http://localhost:8080/oauth2/callback"
+
+# after opening the above URL and clicking "Authorize", the user is redirected to:
+# http://localhost:8080/oauth2/callback?code=authorization_code
+
+access_token = client.auth_code.get_token(
+  'authorization_code',
+  redirect_uri: 'http://localhost:8080/oauth2/callback'
+)
+response = access_token.get('/api/v3.0/get_current_user')
+puts response.body
 ```
 
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
-
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
+Splitwise uses OAuth for authentication. To connect via OAuth, you'll need to [register your app](https://secure.splitwise.com/apps) on Splitwise. When you register, you'll be given a consumer key and a consumer secret, which can be used by your application to make requests to the Splitwise server.
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+  OAuth can be a very confusing protocol to implement correctly, and we <strong>strongly</strong> recommend that you use an existing OAuth library to connect to Splitwise. You can find a list of OAuth client libraries at the <a href="https://oauth.net/code/#client-libraries">OAuth community site</a>.
 </aside>
 
-# Kittens
+For more information on using OAuth, check out the following resources:
 
-## Get All Kittens
+- The OAuth community [getting started](http://oauth.net/documentation/getting-started/) guide
+- The term.ie [OAuth test server](http://term.ie/oauth/example/) (great for debugging authorization issues)
+- This old [Splitwise blog post](https://blog.splitwise.com/2013/07/15/setting-up-oauth-for-the-splitwise-api/) about OAuth
 
-```ruby
-require 'kittn'
+# An important note about nested parameters
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
-
-This endpoint retrieves all kittens.
-
-### HTTP Request
-
-`GET http://example.com/api/kittens`
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
-```
-
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
-
-## Delete a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
-```
-
-This endpoint retrieves a specific kitten.
-
-### HTTP Request
-
-`DELETE http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
-
+Due to a quirk in Splitwise's servers, nested parameters (e.g. `users[1][first_name]`) cannot currently be used when submitting a request. Instead, to indicate nested parameters, use double underscores (e.g. `users__1__first_name`). We hope to support proper nested parameters in future API versions.
