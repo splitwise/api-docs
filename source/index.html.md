@@ -31,7 +31,7 @@ If something in the API is confusing you, you can open an [issue](https://github
 # Authentication
 
 ```ruby
-require 'oauth'
+require 'oauth2'
 
 client = OAuth2::Client.new(
   'consumer_key',
