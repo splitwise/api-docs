@@ -13,6 +13,9 @@ set :markdown,
     no_intra_emphasis: true,
     renderer: UniqueHeadCounter
 
+# handle the "CNAME" file for GitHub Pages
+page "CNAME", layout: false
+
 # Assets
 set :css_dir, 'stylesheets'
 set :js_dir, 'javascripts'
