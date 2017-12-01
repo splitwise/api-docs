@@ -52,7 +52,7 @@ A Group represents a collection of users who share expenses together. For exampl
             "from": 12345,          // user_id
             "to": 54321,            // user_id
             "amount":"414.5",       // amount as a decimal string
-            "currency_code":"USD"   // ISO 4217 currency code
+            "currency_code":"USD"   // three-letter currency code
          } // , ...
       ]
     },
@@ -67,7 +67,7 @@ A Group represents a collection of users who share expenses together. For exampl
             "from": 12345,          // user_id
             "to": 54321,            // user_id
             "amount":"414.5",       // amount as a decimal string
-            "currency_code":"USD"   // ISO 4217 currency code
+            "currency_code":"USD"   // three-letter currency code
          } // , ...
       ],
       "simplified_debts":[  
@@ -75,7 +75,7 @@ A Group represents a collection of users who share expenses together. For exampl
             "from": 12345,          // user_id
             "to": 54321,            // user_id
             "amount":"414.5",       // amount as a decimal string
-            "currency_code":"USD"   // ISO 4217 currency code
+            "currency_code":"USD"   // three-letter currency code
          } // , ...
       ],
       "whiteboard":"a message!",
@@ -107,7 +107,7 @@ Returns list of all groups that the current_user belongs to
             "from": 12345,          // user_id
             "to": 54321,            // user_id
             "amount":"414.5",       // amount as a decimal string
-            "currency_code":"USD"   // ISO 4217 currency code
+            "currency_code":"USD"   // three-letter currency code
          } // , ...
       ],
       "simplified_debts":[  
@@ -115,7 +115,7 @@ Returns list of all groups that the current_user belongs to
             "from": 12345,          // user_id
             "to": 54321,            // user_id
             "amount":"414.5",       // amount as a decimal string
-            "currency_code":"USD"   // ISO 4217 currency code
+            "currency_code":"USD"   // three-letter currency code
          } // , ...
       ],
       "whiteboard":"a message!",
@@ -159,10 +159,17 @@ Create a new group. Adds the current user to the group by default.
 
 ### Query Parameters
 
+<aside class="notice">name and at least one user is required</aside>
+
 <aside class="notice">User params are in the format `users__index__param` where `index` is an array index (0-based) and `param` is either `first_name`, `last_name`, `email`, or `user-id`</aside>
+
 
 Parameter | Type | Description
 --------- | ---- | -----------
+name | String | Group name
+whiteboard | String | Text to display on the group whiteboard
+group_type | String | What the group is being used for (apartment, trip, couple, etc.)
+simplify_by_default| Boolean | Turn on simplify debts?
 users__0__first_name | String | Add a user's first name
 users__0__last_name | String | Add a user's last name
 users__0__email | String | Add a user's email
