@@ -1,6 +1,6 @@
 # Groups
 
-We're still in the process of creating this new API documentation site, so not all API calls are documented here yet. You can find our old API docs [here](http://dev.splitwise.com/), with basic information about all the API endpoints below.
+A Group represents a collection of users who share expenses together. For example, some users use a Group to aggregate expenses related to an apartment. Others use it to represent a trip. Expenses assigned to a group are split among the users of that group. Importantly, two users in a Group can also have expenses with one another outside of the Group.
 
 ## get_groups
 
