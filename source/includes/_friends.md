@@ -28,7 +28,7 @@ Friends of a user are other users with whom the user splits expenses. To split e
           "amount":"7.5"
         }
       ],
-      "groups":[
+      "groups":[ // group objects only include group balances with that friend
         {
           "group_id":3018312,
           "balance":[
