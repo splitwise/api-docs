@@ -203,7 +203,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;ruby&quot;]">
+  <body class="index" data-languages="[&quot;ruby--oauth2&quot;,&quot;ruby--oauth1&quot;,&quot;javascript--oauth2&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -213,7 +213,9 @@
     <div class="toc-wrapper">
       <img src="images/logo.png" class="logo" alt="Logo" />
         <div class="lang-selector">
-              <a href="#" data-language-name="ruby">ruby</a>
+              <a href="#" data-language-name="ruby--oauth2">ruby--oauth2</a>
+              <a href="#" data-language-name="ruby--oauth1">ruby--oauth1</a>
+              <a href="#" data-language-name="javascript--oauth2">javascript--oauth2</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -372,27 +374,179 @@
 <p>Hey there! We&#39;re glad you&#39;re interested in the Splitwise API. This documentation will help you to fetch information on users, expenses, groups, and much more.</p>
 
 <p>If something in the API is confusing you, you can open an <a href="https://github.com/splitwise/api-docs/issues">issue</a> about it on GitHub. We&#39;re a small team, so we may not have an instant fix, but we&#39;ll get back to you as soon as we&#39;re able. (If you spot an issue in our API documentation itself, feel free to open a <a href="https://github.com/splitwise/api-docs/pulls">pull request</a> to update this website!)</p>
-<h1 id='authentication'>Authentication</h1><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'oauth2'</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="no">OAuth2</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span>
-  <span class="s1">'consumer_key'</span><span class="p">,</span>
-  <span class="s1">'consumer_secret'</span><span class="p">,</span>
-  <span class="ss">site: </span><span class="s1">'https://www.splitwise.com/'</span>
-<span class="p">)</span>
-<span class="n">client</span><span class="p">.</span><span class="nf">auth_code</span><span class="p">.</span><span class="nf">authorize_url</span><span class="p">(</span>
-  <span class="ss">redirect_uri: </span><span class="s1">'http://localhost:8080/oauth2/callback'</span>
-<span class="p">)</span>
-<span class="c1"># =&gt; "https://www.splitwise.com/oauth/authorization?response_type=code&amp;client_id=consumer_key&amp;redirect_uri=http://localhost:8080/oauth2/callback"</span>
+<aside class="warning"> We're still in the process of creating this new API documentation site, so not all API calls are documented here yet. You can find our old API docs <a href="http://dev.splitwise.com">here</a> along with several discussions in the comments. </aside>
+<h1 id='authentication'>Authentication</h1><pre class="highlight ruby tab-ruby--oauth2"><code><span class="c1">#!/usr/bin/env ruby</span>
+<span class="nb">require</span> <span class="s1">'oauth2'</span> <span class="c1"># gem 'oauth2'</span>
 
-<span class="c1"># after opening the above URL and clicking "Authorize", the user is redirected to:</span>
-<span class="c1"># http://localhost:8080/oauth2/callback?code=authorization_code</span>
+<span class="no">CONSUMER_KEY</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">fill</span> <span class="k">in</span> <span class="n">your</span> <span class="n">key</span><span class="o">&gt;</span>
+<span class="no">CONSUMER_SECRET</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">fill</span> <span class="k">in</span> <span class="n">your</span> <span class="n">secret</span><span class="o">&gt;</span>
+<span class="no">TOKEN_URL</span> <span class="o">=</span> <span class="s1">'https://secure.splitwise.com/oauth/token'</span>
+<span class="no">AUTHORIZE_URL</span> <span class="o">=</span> <span class="s1">'https://secure.splitwise.com/oauth/authorize'</span>
+<span class="no">MY_CALLBACK_URL</span> <span class="o">=</span> <span class="s1">'http://localhost:8080/callback'</span>
+<span class="no">BASE_SITE</span> <span class="o">=</span> <span class="s1">'https://secure.splitwise.com/'</span>
 
-<span class="n">access_token</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">auth_code</span><span class="p">.</span><span class="nf">get_token</span><span class="p">(</span>
-  <span class="s1">'authorization_code'</span><span class="p">,</span>
-  <span class="ss">redirect_uri: </span><span class="s1">'http://localhost:8080/oauth2/callback'</span>
-<span class="p">)</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">access_token</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s1">'/api/v3.0/get_current_user'</span><span class="p">)</span>
-<span class="nb">puts</span> <span class="n">response</span><span class="p">.</span><span class="nf">body</span>
+<span class="n">client</span> <span class="o">=</span> <span class="no">OAuth2</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">CONSUMER_KEY</span><span class="p">,</span> <span class="no">CONSUMER_SECRET</span><span class="p">,</span> <span class="ss">site: </span><span class="no">BASE_SITE</span><span class="p">)</span>
+<span class="n">authorize_url</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">auth_code</span><span class="p">.</span><span class="nf">authorize_url</span><span class="p">(</span><span class="ss">redirect_uri: </span><span class="no">MY_CALLBACK_URL</span><span class="p">)</span>
+<span class="c1"># =&gt; "https://www.splitwise.com/oauth/authorize?response_type=code&amp;client_id=#{CONSUMER_KEY}&amp;redirect_uri=#{MY_CALLBACK_URL}</span>
+
+<span class="nb">require</span> <span class="s1">'webrick'</span>
+<span class="nb">require</span> <span class="s1">'cgi'</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="no">WEBrick</span><span class="o">::</span><span class="no">HTTPServer</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span>
+  <span class="no">Port</span><span class="p">:</span> <span class="mi">8080</span><span class="p">,</span>
+  <span class="no">StartCallback</span><span class="p">:</span> <span class="nb">proc</span> <span class="p">{</span> <span class="nb">puts</span> <span class="s2">"Opening 'localhost:8080'"</span><span class="p">;</span> <span class="sb">`open 'http://localhost:8080/'`</span> <span class="p">})</span>
+
+<span class="n">server</span><span class="p">.</span><span class="nf">mount_proc</span> <span class="s2">"/"</span> <span class="k">do</span> <span class="o">|</span><span class="n">req</span><span class="p">,</span> <span class="n">res</span><span class="o">|</span>
+  <span class="n">res</span><span class="p">.</span><span class="nf">body</span> <span class="o">=</span> <span class="s2">"&lt;a href=</span><span class="se">\"</span><span class="si">#{</span><span class="n">authorize_url</span><span class="si">}</span><span class="se">\"</span><span class="s2">&gt; Get Code &lt;/a&gt;"</span>
+<span class="k">end</span>
+
+<span class="n">server</span><span class="p">.</span><span class="nf">mount_proc</span> <span class="s2">"/callback"</span> <span class="k">do</span> <span class="o">|</span><span class="n">req</span><span class="p">,</span> <span class="n">res</span><span class="o">|</span>
+  <span class="n">authorization_code</span> <span class="o">=</span> <span class="no">CGI</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">req</span><span class="p">.</span><span class="nf">query_string</span><span class="p">)[</span><span class="s1">'code'</span><span class="p">]</span>
+  <span class="n">access_token</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">auth_code</span><span class="p">.</span><span class="nf">get_token</span><span class="p">(</span>
+    <span class="n">authorization_code</span><span class="p">,</span>
+    <span class="ss">redirect_uri: </span><span class="no">MY_CALLBACK_URL</span>
+  <span class="p">)</span>
+  <span class="n">response</span> <span class="o">=</span> <span class="n">access_token</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s1">'/api/v3.0/get_current_user'</span><span class="p">)</span>
+  <span class="n">res</span><span class="p">.</span><span class="nf">body</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="nf">body</span>
+<span class="k">end</span>
+
+<span class="c1"># Triggered by ^C on os x; run `$ stty -a |grep intr` to find appropriate key combination</span>
+<span class="nb">trap</span><span class="p">(</span><span class="s1">'INT'</span><span class="p">)</span> <span class="p">{</span> <span class="n">server</span><span class="p">.</span><span class="nf">stop</span> <span class="p">}</span>
+<span class="n">server</span><span class="p">.</span><span class="nf">start</span>
+</code></pre><pre class="highlight ruby tab-ruby--oauth1"><code><span class="c1">#!/usr/bin/env ruby</span>
+<span class="nb">require</span> <span class="s1">'oauth'</span> <span class="c1"># gem oauth</span>
+
+<span class="no">CONSUMER_KEY</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">fill</span> <span class="k">in</span> <span class="n">your</span> <span class="n">key</span><span class="o">&gt;</span>
+<span class="no">CONSUMER_SECRET</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">fill</span> <span class="k">in</span> <span class="n">your</span> <span class="n">secret</span><span class="o">&gt;</span>
+<span class="no">REQUEST_TOKEN_URL</span> <span class="o">=</span><span class="s1">'https://secure.splitwise.com/oauth/request_token'</span>
+<span class="no">ACCESS_TOKEN_URL</span> <span class="o">=</span> <span class="s1">'https://secure.splitwise.com/oauth/access_token'</span>
+<span class="no">AUTHORIZE_URL</span> <span class="o">=</span> <span class="s1">'https://secure.splitwise.com/oauth/authorize'</span>
+<span class="no">MY_CALLBACK_URL</span> <span class="o">=</span> <span class="s1">'http://localhost:8080/callback'</span>
+
+<span class="n">consumer</span> <span class="o">=</span> <span class="no">OAuth</span><span class="o">::</span><span class="no">Consumer</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">CONSUMER_KEY</span><span class="p">,</span> <span class="no">CONSUMER_SECRET</span><span class="p">,</span> <span class="ss">site: </span><span class="s1">'https://www.splitwise.com'</span><span class="p">)</span>
+<span class="n">request_token</span> <span class="o">=</span> <span class="n">consumer</span><span class="p">.</span><span class="nf">get_request_token</span><span class="p">(</span><span class="ss">oauth_callback: </span><span class="no">MY_CALLBACK_URL</span><span class="p">)</span>
+<span class="c1"># =&gt; "https://www.splitwise.com/oauth/authorize?oauth_token="#{request_token}"</span>
+
+<span class="nb">require</span> <span class="s1">'webrick'</span>
+<span class="nb">require</span> <span class="s1">'cgi'</span>
+<span class="n">server</span> <span class="o">=</span> <span class="no">WEBrick</span><span class="o">::</span><span class="no">HTTPServer</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span>
+  <span class="no">Port</span><span class="p">:</span> <span class="mi">8080</span><span class="p">,</span>
+  <span class="no">StartCallback</span><span class="p">:</span> <span class="nb">proc</span> <span class="p">{</span> <span class="nb">puts</span> <span class="s2">"Opening 'localhost:8080'"</span><span class="p">;</span> <span class="sb">`open 'http://localhost:8080/'`</span> <span class="p">})</span>
+
+<span class="n">server</span><span class="p">.</span><span class="nf">mount_proc</span> <span class="s2">"/"</span> <span class="k">do</span> <span class="o">|</span><span class="n">req</span><span class="p">,</span> <span class="n">res</span><span class="o">|</span>
+  <span class="n">res</span><span class="p">.</span><span class="nf">body</span> <span class="o">=</span> <span class="s2">"&lt;a href=</span><span class="se">\"</span><span class="si">#{</span><span class="n">request_token</span><span class="p">.</span><span class="nf">authorize_url</span><span class="si">}</span><span class="se">\"</span><span class="s2">&gt; Get Code &lt;/a&gt;"</span>
+<span class="k">end</span>
+
+<span class="n">server</span><span class="p">.</span><span class="nf">mount_proc</span> <span class="s2">"/callback"</span> <span class="k">do</span> <span class="o">|</span><span class="n">req</span><span class="p">,</span> <span class="n">res</span><span class="o">|</span>
+  <span class="n">oauth_verifier</span> <span class="o">=</span> <span class="no">CGI</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">req</span><span class="p">.</span><span class="nf">query_string</span><span class="p">)[</span><span class="s1">'oauth_verifier'</span><span class="p">].</span><span class="nf">first</span>
+  <span class="n">access_token</span> <span class="o">=</span> <span class="n">request_token</span><span class="p">.</span><span class="nf">get_access_token</span><span class="p">(</span><span class="ss">oauth_verifier: </span><span class="n">oauth_verifier</span><span class="p">)</span>
+  <span class="n">access_token</span><span class="p">.</span><span class="nf">params</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">|</span>
+    <span class="nb">puts</span> <span class="s2">"  </span><span class="si">#{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">v</span><span class="si">}</span><span class="s2">"</span> <span class="k">unless</span> <span class="n">k</span><span class="p">.</span><span class="nf">is_a?</span><span class="p">(</span><span class="no">Symbol</span><span class="p">)</span>
+  <span class="k">end</span>
+  <span class="n">response</span> <span class="o">=</span> <span class="n">access_token</span><span class="p">.</span><span class="nf">request</span><span class="p">(</span><span class="ss">:get</span><span class="p">,</span> <span class="s1">'/api/v3.0/get_current_user'</span><span class="p">)</span>
+  <span class="n">res</span><span class="p">.</span><span class="nf">body</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="nf">body</span>
+<span class="k">end</span>
+
+<span class="c1"># Triggered by ^C on os x; run `$ stty -a |grep intr` to find appropriate key combination</span>
+<span class="nb">trap</span><span class="p">(</span><span class="s1">'INT'</span><span class="p">)</span> <span class="p">{</span> <span class="n">server</span><span class="p">.</span><span class="nf">stop</span> <span class="p">}</span>
+<span class="n">server</span><span class="p">.</span><span class="nf">start</span>
+</code></pre><pre class="highlight javascript tab-javascript--oauth2"><code><span class="cp">#!/usr/bin/env node
+</span><span class="s1">'use strict'</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">OAuth</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'oauth'</span><span class="p">);</span>
+<span class="kr">const</span> <span class="p">{</span><span class="nx">exec</span><span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'child_process'</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">qs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'querystring'</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'http'</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">CONSUMER_KEY</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">fill</span> <span class="k">in</span> <span class="nx">your</span> <span class="nx">key</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">CONSUMER_SECRET</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">fill</span> <span class="k">in</span> <span class="nx">your</span> <span class="nx">secret</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">TOKEN_URL</span> <span class="o">=</span> <span class="s1">'/oauth/token'</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">AUTHORIZE_URL</span> <span class="o">=</span> <span class="s1">'/oauth/authorize'</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">MY_CALLBACK_URL</span> <span class="o">=</span> <span class="s1">'http://localhost:8080/callback'</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">BASE_SITE</span> <span class="o">=</span> <span class="s1">'https://www.splitwise.com'</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">authURL</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OAuth</span><span class="p">.</span><span class="nx">OAuth2</span><span class="p">(</span>
+  <span class="nx">CONSUMER_KEY</span><span class="p">,</span>
+  <span class="nx">CONSUMER_SECRET</span><span class="p">,</span>
+  <span class="nx">BASE_SITE</span><span class="p">,</span>
+  <span class="nx">AUTHORIZE_URL</span><span class="p">,</span>
+  <span class="nx">TOKEN_URL</span><span class="p">,</span>
+  <span class="kc">null</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">p</span><span class="p">);</span>
+
+  <span class="kd">var</span> <span class="nx">pLen</span> <span class="o">=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+
+  <span class="nx">authURL</span> <span class="o">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">getAuthorizeUrl</span><span class="p">({</span>
+    <span class="na">redirect_uri</span><span class="p">:</span> <span class="nx">MY_CALLBACK_URL</span><span class="p">,</span>
+    <span class="na">response_type</span><span class="p">:</span> <span class="s1">'code'</span>
+  <span class="p">});</span>
+
+  <span class="cm">/**
+   * Creating an anchor with authURL as href and sending as response
+   */</span>
+  <span class="kd">var</span> <span class="nx">body</span> <span class="o">=</span> <span class="s1">'&lt;a href="'</span> <span class="o">+</span> <span class="nx">authURL</span> <span class="o">+</span> <span class="s1">'"&gt; Get Code &lt;/a&gt;'</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">pLen</span> <span class="o">===</span> <span class="mi">2</span> <span class="o">&amp;&amp;</span> <span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">===</span> <span class="s1">''</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span>
+      <span class="s1">'Content-Length'</span><span class="p">:</span> <span class="nx">body</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+      <span class="s1">'Content-Type'</span><span class="p">:</span> <span class="s1">'text/html'</span>
+    <span class="p">});</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">body</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">pLen</span> <span class="o">===</span> <span class="mi">2</span> <span class="o">&amp;&amp;</span> <span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">'callback'</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="cm">/** To obtain and parse code='...' from code?code='...' */</span>
+    <span class="kd">var</span> <span class="nx">qsObj</span> <span class="o">=</span> <span class="nx">qs</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">split</span><span class="p">(</span><span class="s1">'?'</span><span class="p">)[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">qsObj</span><span class="p">.</span><span class="nx">code</span><span class="p">);</span>
+    <span class="cm">/** Obtaining access_token */</span>
+    <span class="nx">client</span><span class="p">.</span><span class="nx">getOAuthAccessToken</span><span class="p">(</span>
+      <span class="nx">qsObj</span><span class="p">.</span><span class="nx">code</span><span class="p">,</span>
+      <span class="p">{</span>
+        <span class="s1">'redirect_uri'</span><span class="p">:</span> <span class="nx">MY_CALLBACK_URL</span><span class="p">,</span>
+        <span class="s1">'grant_type'</span><span class="p">:</span> <span class="s1">'authorization_code'</span>
+      <span class="p">},</span>
+      <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">access_token</span><span class="p">,</span> <span class="nx">refresh_token</span><span class="p">,</span> <span class="nx">results</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+          <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">e</span><span class="p">));</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">results</span><span class="p">);</span>
+          <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">results</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Obtained access_token: '</span><span class="p">,</span> <span class="nx">access_token</span><span class="p">);</span>
+          <span class="nx">client</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'https://secure.splitwise.com/api/v3.0/get_current_user'</span><span class="p">,</span> <span class="nx">access_token</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+            <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+          <span class="p">});</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// Unhandled url</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">({</span><span class="na">port</span><span class="p">:</span> <span class="mi">8080</span><span class="p">},</span> <span class="nx">serverReady</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">serverReady</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Server on port </span><span class="p">${</span><span class="nx">server</span><span class="p">.</span><span class="nx">address</span><span class="p">().</span><span class="nx">port</span><span class="p">}</span><span class="s2"> is now up`</span><span class="p">);</span>
+  <span class="nx">exec</span><span class="p">(</span><span class="s2">`open http://localhost:8080/`</span><span class="p">,</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">stdout</span><span class="p">,</span> <span class="nx">stderr</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// node couldn't execute the command</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// the *entire* stdout and stderr (buffered)</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`stdout: </span><span class="p">${</span><span class="nx">stdout</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`stderr: </span><span class="p">${</span><span class="nx">stderr</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">client</span><span class="p">;</span>
+
 </code></pre>
 <p>Splitwise uses OAuth for authentication. To connect via OAuth, you&#39;ll need to <a href="https://secure.splitwise.com/apps">register your app</a> on Splitwise. When you register, you&#39;ll be given a consumer key and a consumer secret, which can be used by your application to make requests to the Splitwise server.</p>
 
@@ -409,9 +563,11 @@
 </ul>
 <h1 id='an-important-note-about-nested-parameters'>An important note about nested parameters</h1>
 <p>Due to a quirk in Splitwise&#39;s servers, nested parameters (e.g. <code>users[1][first_name]</code>) cannot currently be used when submitting a request. Instead, to indicate nested parameters, use double underscores (e.g. <code>users__1__first_name</code>). We hope to support proper nested parameters in future API versions.</p>
-<h1 id='users'>Users</h1><h2 id='get_current_user'>get_current_user</h2>
+<h1 id='users'>Users</h1>
+<aside class="notice">For the active user, all fields will be returned. For other users (e.g. friends), only some fields will be returned.</aside>
+<h2 id='get_current_user'>get_current_user</h2>
 <blockquote>
-<p>User JSON objects are structured like this:</p>
+<p>Example Response:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -424,26 +580,41 @@
       </span><span class="s2">"large"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ada@example.com"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"registration_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"confirmed"</span><span class="p">,</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="err">'dummy'</span><span class="p">,</span><span class="w"> </span><span class="err">'invited'</span><span class="p">,</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">'confirmed'</span><span class="w">
+    </span><span class="s2">"registration_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"confirmed"</span><span class="p">,</span><span class="w">           </span><span class="err">//'dummy'</span><span class="p">,</span><span class="w"> </span><span class="err">'invited'</span><span class="p">,</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">'confirmed'</span><span class="w">
     </span><span class="s2">"default_currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"notifications_read"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-06-02T20:21:57Z"</span><span class="p">,</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">last</span><span class="w"> </span><span class="err">time</span><span class="w"> </span><span class="err">notifications</span><span class="w"> </span><span class="err">were</span><span class="w"> </span><span class="err">marked</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">read</span><span class="w">
-    </span><span class="s2">"notifications_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">                    </span><span class="err">#</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">number</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">unread</span><span class="w"> </span><span class="err">notifications</span><span class="w">
-    </span><span class="s2">"notifications"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                            </span><span class="err">#</span><span class="w"> </span><span class="err">notification</span><span class="w"> </span><span class="err">preferences</span><span class="w">
+    </span><span class="s2">"notifications_read"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-06-02T20:21:57Z"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">last</span><span class="w"> </span><span class="err">time</span><span class="w"> </span><span class="err">notifications</span><span class="w"> </span><span class="err">were</span><span class="w"> </span><span class="err">marked</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">read</span><span class="w">
+    </span><span class="s2">"notifications_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">                    </span><span class="err">//</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">number</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">unread</span><span class="w"> </span><span class="err">notifications</span><span class="w">
+    </span><span class="s2">"notifications"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                            </span><span class="err">//</span><span class="w"> </span><span class="err">notification</span><span class="w"> </span><span class="err">preferences</span><span class="w">
       </span><span class="s2">"added_as_friend"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-      </span><span class="err">#</span><span class="w"> </span><span class="err">...</span><span class="w">
+      </span><span class="err">//</span><span class="w"> </span><span class="err">...</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<blockquote>
-<p>For the active user, all fields will be returned. For other users (e.g. friends), only some fields will be returned.</p>
-</blockquote>
-
 <p><code>GET https://www.splitwise.com/api/v3.0/get_current_user</code></p>
 
 <p>Retrieve info about the user who is currently logged in.</p>
 <h2 id='get_user-id'>get_user/:id</h2>
+<blockquote>
+<p>Example Response:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ada"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Lovelace"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"picture"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"small"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"medium"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"large"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ada@example.com"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"registration_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"confirmed"</span><span class="w">           </span><span class="err">//'dummy'</span><span class="p">,</span><span class="w"> </span><span class="err">'invited'</span><span class="p">,</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">'confirmed'</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <p><code>GET https://www.splitwise.com/api/v3.0/get_user/:id</code></p>
 
 <p>Retrieve info about another user that the current user is acquainted with (e.g. they are friends, or they both belong to the same group).</p>
@@ -451,9 +622,710 @@
 <p><code>POST https://www.splitwise.com/api/v3.0/update_user/:id</code></p>
 
 <p>Update a specific user. A user can edit anything about their own account, and may edit the <code>first_name</code>, <code>last_name</code>, and <code>email</code> for any acquaintances who have not logged in yet.</p>
+<h3 id='query-parameters'>Query Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>first_name</td>
+<td>String</td>
+<td>User&#39;s first name</td>
+</tr>
+<tr>
+<td>last_name</td>
+<td>String</td>
+<td>User&#39;s last name</td>
+</tr>
+<tr>
+<td>email</td>
+<td>String</td>
+<td>User&#39;s email address</td>
+</tr>
+<tr>
+<td>password</td>
+<td>String</td>
+<td>User&#39;s password</td>
+</tr>
+<tr>
+<td>locale</td>
+<td>String</td>
+<td>User&#39;s locale (ISO 639-1)</td>
+</tr>
+<tr>
+<td>date_format</td>
+<td>String</td>
+<td>Preferred Date Format (e.g. MM/DD/YYYY or</td>
+</tr>
+<tr>
+<td>default_currency</td>
+<td>String</td>
+<td>User&#39;s default currency (ISO 4217)</td>
+</tr>
+<tr>
+<td>default_group_id</td>
+<td>String</td>
+<td>Default Group ID (set -1 for none)</td>
+</tr>
+<tr>
+<td>notification_settings</td>
+<td>Object <br><code>{ notification_type: bool, ... }</code></td>
+<td>Set notification types on or off: added_as_friend, added_to_group, expense_added, expense_updated, bills, payments, monthly_summary, announcements,}</td>
+</tr>
+</tbody></table>
 <h1 id='groups'>Groups</h1>
-<p>We&#39;re still in the process of creating this new API documentation site, so not all API calls are documented here yet. You can find our old API docs <a href="http://dev.splitwise.com/">here</a>, with basic information about all the API endpoints below.</p>
-<h2 id='get_groups'>get_groups</h2><h2 id='get_group-id'>get_group/:id</h2><h2 id='create_group'>create_group</h2><h2 id='delete_group-id'>delete_group/:id</h2><h2 id='undelete_group-id'>undelete_group/:id</h2><h2 id='add_user_to_group'>add_user_to_group</h2><h2 id='remove_user_from_group'>remove_user_from_group</h2><h1 id='friends'>Friends</h1><h2 id='get_friends'>get_friends</h2><h2 id='get_friend-id'>get_friend/:id</h2><h2 id='create_friend'>create_friend</h2><h2 id='create_friends'>create_friends</h2><h2 id='delete_friend-id'>delete_friend/:id</h2><h1 id='expenses'>Expenses</h1><h2 id='get_expenses'>get_expenses</h2><h2 id='get_expense-id'>get_expense/:id</h2><h2 id='create_expense'>create_expense</h2><h2 id='update_expense-id'>update_expense/:id</h2><h2 id='delete_expense-id'>delete_expense/:id</h2><h2 id='undelete_expense-id'>undelete_expense/:id</h2><h1 id='comments'>Comments</h1><h2 id='get_comments-expense_id-id'>get_comments?expense_id=<id></h2><h1 id='notifications'>Notifications</h1><h2 id='get_notifications'>get_notifications</h2><h1 id='other-api-calls'>Other API calls</h1><h2 id='get_currencies'>get_currencies</h2><h2 id='get_categories'>get_categories</h2><h2 id='parse_sentence'>parse_sentence</h2><h1 id='errors'>Errors</h1>
+<p>A Group represents a collection of users who share expenses together. For example, some users use a Group to aggregate expenses related to an apartment. Others use it to represent a trip. Expenses assigned to a group are split among the users of that group. Importantly, two users in a Group can also have expenses with one another outside of the Group.</p>
+<h2 id='get_groups'>get_groups</h2>
+<blockquote>
+<p>Example Response:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"groups"</span><span class="p">:[</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="err">Non-group</span><span class="w"> </span><span class="err">expenses</span><span class="w"> </span><span class="err">are</span><span class="w"> </span><span class="err">listed</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">group</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">id</span><span class="w"> </span><span class="mi">0</span><span class="w">
+    </span><span class="p">{</span><span class="w">  
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"Non-group expenses"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-08-30T20:31:51Z"</span><span class="p">,</span><span class="w"> </span><span class="err">//&lt;current</span><span class="w"> </span><span class="err">time</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="err">UTC&gt;</span><span class="w">
+      </span><span class="s2">"members"</span><span class="p">:[</span><span class="w"> 
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ada"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Lovelace"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"picture"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"small"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"medium"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"large"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ada@example.com"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"registration_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"confirmed"</span><span class="p">,</span><span class="w">          </span><span class="err">//'dummy'</span><span class="p">,</span><span class="w"> </span><span class="err">'invited'</span><span class="p">,</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">'confirmed'</span><span class="w">
+            </span><span class="s2">"balance"</span><span class="p">:[</span><span class="w">  
+               </span><span class="p">{</span><span class="w">  
+                  </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"AED"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"0.0"</span><span class="w">
+               </span><span class="p">},</span><span class="w">
+               </span><span class="p">{</span><span class="w">  
+                  </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"ALL"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"0.0"</span><span class="w">
+               </span><span class="p">},</span><span class="w">
+               </span><span class="p">{</span><span class="w">  
+                  </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"EUR"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"-5.0"</span><span class="w">
+               </span><span class="p">},</span><span class="w">
+               </span><span class="p">{</span><span class="w">  
+                  </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"3730.5"</span><span class="w">
+               </span><span class="p">}</span><span class="w"> </span><span class="err">//</span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+         </span><span class="p">}</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="w">  
+      </span><span class="p">],</span><span class="w"> 
+      </span><span class="s2">"simplify_by_default"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"original_debts"</span><span class="p">:[</span><span class="w">  
+         </span><span class="p">{</span><span class="w">  
+            </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="mi">12345</span><span class="p">,</span><span class="w">          </span><span class="err">//</span><span class="w"> </span><span class="err">user_id</span><span class="w">
+            </span><span class="s2">"to"</span><span class="p">:</span><span class="w"> </span><span class="mi">54321</span><span class="p">,</span><span class="w">            </span><span class="err">//</span><span class="w"> </span><span class="err">user_id</span><span class="w">
+            </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"414.5"</span><span class="p">,</span><span class="w">       </span><span class="err">//</span><span class="w"> </span><span class="err">amount</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">decimal</span><span class="w"> </span><span class="err">string</span><span class="w">
+            </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"USD"</span><span class="w">   </span><span class="err">//</span><span class="w"> </span><span class="err">three-letter</span><span class="w"> </span><span class="err">currency</span><span class="w"> </span><span class="err">code</span><span class="w">
+         </span><span class="p">}</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">  
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="mi">3018312</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"a test group"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="s2">"2017-08-30T20:31:51Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"members"</span><span class="p">:[</span><span class="w"> </span><span class="err">/*</span><span class="w"> </span><span class="err">&lt;User</span><span class="w"> </span><span class="err">object&gt;</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="err">&lt;User</span><span class="w"> </span><span class="err">object&gt;</span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="err">*/</span><span class="w"> </span><span class="p">],</span><span class="w"> 
+      </span><span class="s2">"simplify_by_default"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"original_debts"</span><span class="p">:[</span><span class="w">  
+         </span><span class="p">{</span><span class="w">  
+            </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="mi">12345</span><span class="p">,</span><span class="w">          </span><span class="err">//</span><span class="w"> </span><span class="err">user_id</span><span class="w">
+            </span><span class="s2">"to"</span><span class="p">:</span><span class="w"> </span><span class="mi">54321</span><span class="p">,</span><span class="w">            </span><span class="err">//</span><span class="w"> </span><span class="err">user_id</span><span class="w">
+            </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"414.5"</span><span class="p">,</span><span class="w">       </span><span class="err">//</span><span class="w"> </span><span class="err">amount</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">decimal</span><span class="w"> </span><span class="err">string</span><span class="w">
+            </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"USD"</span><span class="w">   </span><span class="err">//</span><span class="w"> </span><span class="err">three-letter</span><span class="w"> </span><span class="err">currency</span><span class="w"> </span><span class="err">code</span><span class="w">
+         </span><span class="p">}</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"simplified_debts"</span><span class="p">:[</span><span class="w">  
+         </span><span class="p">{</span><span class="w">  
+            </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="mi">12345</span><span class="p">,</span><span class="w">          </span><span class="err">//</span><span class="w"> </span><span class="err">user_id</span><span class="w">
+            </span><span class="s2">"to"</span><span class="p">:</span><span class="w"> </span><span class="mi">54321</span><span class="p">,</span><span class="w">            </span><span class="err">//</span><span class="w"> </span><span class="err">user_id</span><span class="w">
+            </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"414.5"</span><span class="p">,</span><span class="w">       </span><span class="err">//</span><span class="w"> </span><span class="err">amount</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">decimal</span><span class="w"> </span><span class="err">string</span><span class="w">
+            </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"USD"</span><span class="w">   </span><span class="err">//</span><span class="w"> </span><span class="err">three-letter</span><span class="w"> </span><span class="err">currency</span><span class="w"> </span><span class="err">code</span><span class="w">
+         </span><span class="p">}</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"whiteboard"</span><span class="p">:</span><span class="s2">"a message!"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"group_type"</span><span class="p">:</span><span class="s2">"apartment"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"invite_link"</span><span class="p">:</span><span class="s2">"https://www.splitwise.com/join/abcdef1232456"</span><span class="w">
+    </span><span class="p">}</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code>GET https://www.splitwise.com/api/v3.0/get_groups</code></p>
+
+<p>Returns list of all groups that the current_user belongs to</p>
+<h2 id='get_group-id'>get_group/:id</h2>
+<blockquote>
+<p>Example Response:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"group"</span><span class="p">:</span><span class="w">
+    </span><span class="p">{</span><span class="w">  
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="mi">3018312</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"a test group"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="s2">"2017-08-30T20:31:51Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"members"</span><span class="p">:[</span><span class="w"> </span><span class="err">/*</span><span class="w"> </span><span class="err">&lt;User</span><span class="w"> </span><span class="err">object&gt;</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="err">&lt;User</span><span class="w"> </span><span class="err">object&gt;</span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="err">*/</span><span class="w"> </span><span class="p">],</span><span class="w"> 
+      </span><span class="s2">"simplify_by_default"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"original_debts"</span><span class="p">:[</span><span class="w">  
+         </span><span class="p">{</span><span class="w">  
+            </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="mi">12345</span><span class="p">,</span><span class="w">          </span><span class="err">//</span><span class="w"> </span><span class="err">user_id</span><span class="w">
+            </span><span class="s2">"to"</span><span class="p">:</span><span class="w"> </span><span class="mi">54321</span><span class="p">,</span><span class="w">            </span><span class="err">//</span><span class="w"> </span><span class="err">user_id</span><span class="w">
+            </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"414.5"</span><span class="p">,</span><span class="w">       </span><span class="err">//</span><span class="w"> </span><span class="err">amount</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">decimal</span><span class="w"> </span><span class="err">string</span><span class="w">
+            </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"USD"</span><span class="w">   </span><span class="err">//</span><span class="w"> </span><span class="err">three-letter</span><span class="w"> </span><span class="err">currency</span><span class="w"> </span><span class="err">code</span><span class="w">
+         </span><span class="p">}</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"simplified_debts"</span><span class="p">:[</span><span class="w">  
+         </span><span class="p">{</span><span class="w">  
+            </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="mi">12345</span><span class="p">,</span><span class="w">          </span><span class="err">//</span><span class="w"> </span><span class="err">user_id</span><span class="w">
+            </span><span class="s2">"to"</span><span class="p">:</span><span class="w"> </span><span class="mi">54321</span><span class="p">,</span><span class="w">            </span><span class="err">//</span><span class="w"> </span><span class="err">user_id</span><span class="w">
+            </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"414.5"</span><span class="p">,</span><span class="w">       </span><span class="err">//</span><span class="w"> </span><span class="err">amount</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">decimal</span><span class="w"> </span><span class="err">string</span><span class="w">
+            </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"USD"</span><span class="w">   </span><span class="err">//</span><span class="w"> </span><span class="err">three-letter</span><span class="w"> </span><span class="err">currency</span><span class="w"> </span><span class="err">code</span><span class="w">
+         </span><span class="p">}</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"whiteboard"</span><span class="p">:</span><span class="s2">"a message!"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"group_type"</span><span class="p">:</span><span class="s2">"apartment"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"invite_link"</span><span class="p">:</span><span class="s2">"https://www.splitwise.com/join/abcdef1232456"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code>GET https://www.splitwise.com/api/v3.0/get_group/:id</code></p>
+
+<p>Returns information about the specified group (as long as the current user has access)</p>
+<h2 id='create_group'>create_group</h2>
+<blockquote>
+<p>Example Response:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"group"</span><span class="p">:</span><span class="w">
+    </span><span class="p">{</span><span class="w">  
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="mi">3018312</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"a test group"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="s2">"2017-08-30T20:31:51Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"members"</span><span class="p">:[</span><span class="w"> </span><span class="err">/*</span><span class="w"> </span><span class="err">&lt;User</span><span class="w"> </span><span class="err">object&gt;</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="err">&lt;User</span><span class="w"> </span><span class="err">object&gt;</span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="err">*/</span><span class="w"> </span><span class="p">],</span><span class="w"> 
+      </span><span class="s2">"simplify_by_default"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"original_debts"</span><span class="p">:[],</span><span class="w">
+      </span><span class="s2">"simplified_debts"</span><span class="p">:[],</span><span class="w">
+      </span><span class="s2">"whiteboard"</span><span class="p">:</span><span class="s2">"a message!"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"group_type"</span><span class="p">:</span><span class="s2">"apartment"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"invite_link"</span><span class="p">:</span><span class="s2">"https://www.splitwise.com/join/abcdef1232456"</span><span class="p">,</span><span class="w">
+      </span><span class="err">//</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">if</span><span class="w"> </span><span class="err">create</span><span class="w"> </span><span class="err">failed</span><span class="w">
+      </span><span class="s2">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"something went wrong"</span><span class="p">,</span><span class="w"> </span><span class="s2">"with your group"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code>POST https://secure.splitwise.com/api/v3.0/create_group</code></p>
+
+<p>Create a new group. Adds the current user to the group by default.</p>
+<h3 id='query-parameters'>Query Parameters</h3>
+<aside class="notice">name and at least one user is required</aside>
+
+<aside class="notice">User params are in the format `users__index__param` where `index` is an array index (0-based) and `param` is either `first_name`, `last_name`, `email`, or `user-id`</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>Group name</td>
+</tr>
+<tr>
+<td>whiteboard</td>
+<td>String</td>
+<td>Text to display on the group whiteboard</td>
+</tr>
+<tr>
+<td>group_type</td>
+<td>String</td>
+<td>What the group is being used for (apartment, trip, couple, etc.)</td>
+</tr>
+<tr>
+<td>simplify_by_default</td>
+<td>Boolean</td>
+<td>Turn on simplify debts?</td>
+</tr>
+<tr>
+<td>users_<em>0</em>_first_name</td>
+<td>String</td>
+<td>Add a user&#39;s first name</td>
+</tr>
+<tr>
+<td>users_<em>0</em>_last_name</td>
+<td>String</td>
+<td>Add a user&#39;s last name</td>
+</tr>
+<tr>
+<td>users_<em>0</em>_email</td>
+<td>String</td>
+<td>Add a user&#39;s email</td>
+</tr>
+<tr>
+<td>users_<em>1</em>_user_id</td>
+<td>Integer</td>
+<td>Add an existing user by id</td>
+</tr>
+</tbody></table>
+<h2 id='delete_group-id'>delete_group/:id</h2>
+<blockquote>
+<p>Example Response:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code>POST https://secure.splitwise.com/api/v3.0/delete_group/:id</code></p>
+
+<p>Delete an existing group. Destroys all associated records (expenses, etc.)</p>
+<h2 id='undelete_group-id'>undelete_group/:id</h2>
+<blockquote>
+<p>Example Response:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code></code></pre>
+<p>``</p>
+
+<p>Desc: </p>
+<h2 id='add_user_to_group'>add_user_to_group</h2>
+<blockquote>
+<p>Example Response:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="err">//or</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="s2">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"any errors"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code>POST https://secure.splitwise.com/api/v3.0/add_user_to_group</code></p>
+
+<p>Add a user to a group</p>
+<h3 id='query-parameters-2'>Query Parameters</h3>
+<aside class="notice">You must submit the group_id and user_id or the group_id, first_name, last_name, and email</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>group_id</td>
+<td>Integer</td>
+<td>Existing group to add the user to</td>
+</tr>
+<tr>
+<td>first_name</td>
+<td>String</td>
+<td>Add a user&#39;s first name</td>
+</tr>
+<tr>
+<td>last_name</td>
+<td>String</td>
+<td>Add a user&#39;s last name</td>
+</tr>
+<tr>
+<td>email</td>
+<td>String</td>
+<td>Add a user&#39;s email</td>
+</tr>
+<tr>
+<td>user_id</td>
+<td>Integer</td>
+<td>Add an existing user by id</td>
+</tr>
+</tbody></table>
+<h2 id='remove_user_from_group'>remove_user_from_group</h2>
+<blockquote>
+<p>Example Response:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="err">//or</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="s2">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"any errors"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code>POST https://secure.splitwise.com/api/v3.0/remove_user_from_group</code></p>
+
+<p>Remove a user from a group if their balance is 0</p>
+<h3 id='query-parameters-3'>Query Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>group_id</td>
+<td>Integer</td>
+<td>Group to remove the user from</td>
+</tr>
+<tr>
+<td>user_id</td>
+<td>Integer</td>
+<td>Id of user to remove</td>
+</tr>
+</tbody></table>
+<h1 id='friends'>Friends</h1>
+<p>Friends of a user are other users with whom the user splits expenses. To split expenses with one another, users must be friends. Users in a group together are automatically made friends. Many of the calls containing the word “friend” return objects representing friends of the current user. In addition to containing the user data, these objects contain information about the current user&#39;s balance with each friend.</p>
+<h2 id='get_friends'>get_friends</h2>
+<blockquote>
+<p>Example Response:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"friends"</span><span class="p">:[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ada"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Lovelace"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"picture"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"small"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"medium"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"large"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"balance"</span><span class="p">:[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"-1794.5"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"AED"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"7.5"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"groups"</span><span class="p">:[</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">group</span><span class="w"> </span><span class="err">objects</span><span class="w"> </span><span class="err">only</span><span class="w"> </span><span class="err">include</span><span class="w"> </span><span class="err">group</span><span class="w"> </span><span class="err">balances</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">that</span><span class="w"> </span><span class="err">friend</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"group_id"</span><span class="p">:</span><span class="mi">3018312</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"balance"</span><span class="p">:[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"414.5"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"group_id"</span><span class="p">:</span><span class="mi">2830896</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"balance"</span><span class="p">:[</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"group_id"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"balance"</span><span class="p">:[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"-2209.0"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"AED"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"7.5"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="s2">"2017-11-30T09:41:09Z"</span><span class="w">
+    </span><span class="p">}</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code>GET https://www.splitwise.com/api/v3.0/get_friends</code></p>
+
+<p>Returns a list of the current user&#39;s friends.</p>
+<h2 id='get_friend-id'>get_friend/:id</h2>
+<blockquote>
+<p>Example Response:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"friend"</span><span class="p">:</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ada"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Lovelace"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"picture"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"small"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"medium"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"large"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"registration_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"confirmed"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">'dummy'</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">'invited'</span><span class="w">
+      </span><span class="s2">"balance"</span><span class="p">:[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"-1794.5"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"AED"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"7.5"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"groups"</span><span class="p">:[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"group_id"</span><span class="p">:</span><span class="mi">3018312</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"balance"</span><span class="p">:[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"414.5"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"group_id"</span><span class="p">:</span><span class="mi">2830896</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"balance"</span><span class="p">:[</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"group_id"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"balance"</span><span class="p">:[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"-2209.0"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"AED"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"amount"</span><span class="p">:</span><span class="s2">"7.5"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="s2">"2017-11-30T09:41:09Z"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code>GET https://secure.splitwise.com/api/v3.0/get_group/:id</code></p>
+
+<p>Get detailed info on one group that current_user belongs to</p>
+<h2 id='create_friend'>create_friend</h2>
+<blockquote>
+<p>Example Response: same as <a href="#get_friend-id">get_friend response</a></p>
+</blockquote>
+
+<p><code>POST https://secure.splitwise.com/api/v3.0/create_friend</code></p>
+
+<p>Makes the current user a friend of a user specified with the url parameters user_email, user_first_name, and, optionally, user_last_name.</p>
+<h3 id='query-parameters'>Query Parameters</h3>
+<aside class="notice">You must submit the user_email for existing users or user_email,  first_name, and (optionally) last_name for new users</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>user_first_name</td>
+<td>String</td>
+<td>Add a user&#39;s first name</td>
+</tr>
+<tr>
+<td>user_last_name</td>
+<td>String</td>
+<td>Add a user&#39;s last name</td>
+</tr>
+<tr>
+<td>user_email</td>
+<td>String</td>
+<td>Add a user&#39;s email (or find an existing user by email)</td>
+</tr>
+</tbody></table>
+<h2 id='create_friends'>create_friends</h2>
+<blockquote>
+<p>Example Response: same as <a href="#get_friends">get_friends response</a></p>
+</blockquote>
+
+<p><code>POST https://secure.splitwise.com/api/v3.0/create_friends</code></p>
+
+<p>Make the current user a friend of the specified users.</p>
+<h3 id='query-parameters-2'>Query Parameters</h3>
+<aside class="notice">You must submit the user_email for existing users or user_email,  first_name, and (optionally) last_name for new users</aside>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>friends_<em>0</em>_user_first_name</td>
+<td>String</td>
+<td>Add a user&#39;s first name</td>
+</tr>
+<tr>
+<td>friends_<em>0</em>_user_last_name</td>
+<td>String</td>
+<td>Add a user&#39;s last name</td>
+</tr>
+<tr>
+<td>friends_<em>0</em>_user_email</td>
+<td>String</td>
+<td>Add a user&#39;s email (or find an existing user by email)</td>
+</tr>
+<tr>
+<td>friends_<em>1</em>_user_email</td>
+<td>String</td>
+<td>Find an existing user by email)</td>
+</tr>
+</tbody></table>
+<h2 id='delete_friend-id'>delete_friend/:id</h2>
+<blockquote>
+<p>Example Response:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="err">//or</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="s2">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"any errors"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code>POST https://secure.splitwise.com/api/v3.0/delete_friend/:id</code></p>
+
+<p>Given a friend ID, break off the friendship between the current user and the specified user.</p>
+<h1 id='expenses'>Expenses</h1><h2 id='get_expenses'>get_expenses</h2><h2 id='get_expense-id'>get_expense/:id</h2><h2 id='create_expense'>create_expense</h2><h2 id='update_expense-id'>update_expense/:id</h2><h2 id='delete_expense-id'>delete_expense/:id</h2><h2 id='undelete_expense-id'>undelete_expense/:id</h2><h1 id='comments'>Comments</h1><h2 id='get_comments-expense_id-id'>get_comments?expense_id=<id></h2><h1 id='notifications'>Notifications</h1><h2 id='get_notifications'>get_notifications</h2><h1 id='other-api-calls'>Other API calls</h1><h2 id='get_currencies'>get_currencies</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"currencies"</span><span class="p">:[</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"USD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"ARS"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"AUD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"EUR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"€"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"BRL"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"R$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"CAD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"CNY"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"¥"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"DKK"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"kr"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"GBP"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"£"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"INR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"₹"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"ILS"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"₪"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"JPY"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"¥"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"MXN"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"NZD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"PHP"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"₱"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"RUB"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"₽"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"SGD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"SEK"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"kr"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"CHF"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Fr."</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"MYR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"RM"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"RON"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"RON"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"ZAR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"R"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"LKR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Rs. "</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"NAD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"SAR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"SR"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"AED"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"DH"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"PLN"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"PLN"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"HRK"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"HRK"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"PKR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Rs"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"TWD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"NT$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"VEF"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Bs"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"HUF"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Ft"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"CLP"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"BDT"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Tk"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"CZK"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Kč"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"COP"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"TRY"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"TL"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"KRW"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"₩"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"BOB"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Bs."</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"VND"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"₫"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"NOK"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"kr"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"EGP"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"E£"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"HKD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"THB"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"฿"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"KES"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"KSh"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"IDR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Rp "</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"ISK"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"kr"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"BTC"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"฿"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"UAH"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"₴"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"MVR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"MVR"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"OMR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"OMR"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"YER"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"YER"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"IRR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"IRR"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"QAR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"QR"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"BHD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"BD"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"TZS"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"TZS"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"RSD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"RSD"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"ETB"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Br"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"BGN"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"BGN"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"FJD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"JMD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"J$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"UYU"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"GTQ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Q"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"NPR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Rs. "</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"PEN"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"S/. "</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"DJF"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Fdj "</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"LTL"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Lt "</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"MKW"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"MK"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"KWD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"KWD"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"CRC"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"₡"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"DOP"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"NGN"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"₦"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"JOD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"JOD"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"MAD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"MAD"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"RWF"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"FRw"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"UGX"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"USh"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"AOA"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Kz"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"XAF"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"CFA"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"XOF"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"CFA"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"CMG"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"CMg"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"ANG"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"NAf"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"ALL"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"L"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"PYG"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"₲"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"KYD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"CI$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"KZT"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"₸"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"BAM"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"KM"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"AWG"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Afl."</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"BIF"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"FBu"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"MKD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"ден"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"XPF"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"F"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"GEL"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"GEL"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"TND"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"DT"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"MZN"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"MT"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"BYR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"BYR"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"TTD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"TT$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"XCD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"EC$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"LBP"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"ل.ل"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"LAK"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"₭"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"MOP"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"MOP$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"GHS"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"GH₵"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"UZS"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"UZS"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"NIO"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"C$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"AZN"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"m."</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"ZMW"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"ZMW"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"SZL"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"E"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"BWP"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"P"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"MMK"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"K"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"CVE"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"MUR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"₨"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"SCR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"SR"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"KHR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"៛"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"CUP"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"CUC"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"CUC$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"STD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Db"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"HNL"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"L"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"AMD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"AMD"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"MDL"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"MDL"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"MNT"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"₮"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"BYN"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Br"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"MGA"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Ar"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"BBD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"KMF"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"CF"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"IQD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"IQD"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"BZD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"BZ$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"GYD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"G$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"SRD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"KGS"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"KGS"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"TJS"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"TJS"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"VUV"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Vt"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"BTN"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Nu."</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"WST"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"WS$"</span><span class="w"> </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"> 
+</span></code></pre>
+<p><code>GET https://secure.splitwise.com/api/v3.0/get_currencies</code></p>
+
+<p>Returns a list of all currencies allowed by the system.  These are mostly ISO 4217 codes, but we do sometimes use pending codes or unofficial, colloquial codes (like BTC instead of XBT for Bitcoin)</p>
+<h2 id='get_categories'>get_categories</h2><h2 id='parse_sentence'>parse_sentence</h2><h1 id='errors'>Errors</h1>
 <p>In general, the Splitwise API returns the following error codes:</p>
 
 <table><thead>
@@ -503,7 +1375,9 @@
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="ruby">ruby</a>
+                <a href="#" data-language-name="ruby--oauth2">ruby--oauth2</a>
+                <a href="#" data-language-name="ruby--oauth1">ruby--oauth1</a>
+                <a href="#" data-language-name="javascript--oauth2">javascript--oauth2</a>
           </div>
       </div>
     </div>
