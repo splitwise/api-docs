@@ -43,7 +43,7 @@ CONSUMER_KEY = <fill in your key>
 CONSUMER_SECRET = <fill in your secret>
 TOKEN_URL = 'https://secure.splitwise.com/oauth/token'
 AUTHORIZE_URL = 'https://secure.splitwise.com/oauth/authorize'
-MY_CALLBACK_URL = 'http://localhost:8080/callback'
+MY_CALLBACK_URL = 'http://localhost:8080/callback' # Make sure to set the redirect URL that you registered with Splitwise when creating your app so that it matches this URL
 BASE_SITE = 'https://secure.splitwise.com/'
 
 client = OAuth2::Client.new(CONSUMER_KEY, CONSUMER_SECRET, site: BASE_SITE)
@@ -67,6 +67,15 @@ server.mount_proc "/callback" do |req, res|
     authorization_code,
     redirect_uri: MY_CALLBACK_URL
   )
+
+  # This is your actual bearer token! Your bearer token will be printed out to the console.
+  # You can then use that bearer token to make additional API requests to Splitwise. For example:
+  # curl -XGET "http://secure.splitwise.com/api/v3.0/get_current_user" -H "Authorization: Bearer YOUR_TOKEN"
+  puts "***"
+  puts "Here is your OAuth Bearer token!"
+  pp access_token.to_hash
+  puts "***"
+
   response = access_token.get('/api/v3.0/get_current_user')
   res.body = response.body
 end
