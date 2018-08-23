@@ -383,7 +383,7 @@
 <span class="no">CONSUMER_SECRET</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">fill</span> <span class="k">in</span> <span class="n">your</span> <span class="n">secret</span><span class="o">&gt;</span>
 <span class="no">TOKEN_URL</span> <span class="o">=</span> <span class="s1">'https://secure.splitwise.com/oauth/token'</span>
 <span class="no">AUTHORIZE_URL</span> <span class="o">=</span> <span class="s1">'https://secure.splitwise.com/oauth/authorize'</span>
-<span class="no">MY_CALLBACK_URL</span> <span class="o">=</span> <span class="s1">'http://localhost:8080/callback'</span>
+<span class="no">MY_CALLBACK_URL</span> <span class="o">=</span> <span class="s1">'http://localhost:8080/callback'</span> <span class="c1"># Make sure to set the redirect URL that you registered with Splitwise when creating your app so that it matches this URL</span>
 <span class="no">BASE_SITE</span> <span class="o">=</span> <span class="s1">'https://secure.splitwise.com/'</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="no">OAuth2</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">CONSUMER_KEY</span><span class="p">,</span> <span class="no">CONSUMER_SECRET</span><span class="p">,</span> <span class="ss">site: </span><span class="no">BASE_SITE</span><span class="p">)</span>
@@ -407,6 +407,15 @@
     <span class="n">authorization_code</span><span class="p">,</span>
     <span class="ss">redirect_uri: </span><span class="no">MY_CALLBACK_URL</span>
   <span class="p">)</span>
+
+  <span class="c1"># This is your actual bearer token! Your bearer token will be printed out to the console.</span>
+  <span class="c1"># You can then use that bearer token to make additional API requests to Splitwise. For example:</span>
+  <span class="c1"># curl -XGET "http://secure.splitwise.com/api/v3.0/get_current_user" -H "Authorization: Bearer YOUR_TOKEN"</span>
+  <span class="nb">puts</span> <span class="s2">"***"</span>
+  <span class="nb">puts</span> <span class="s2">"Here is your OAuth Bearer token!"</span>
+  <span class="n">pp</span> <span class="n">access_token</span><span class="p">.</span><span class="nf">to_hash</span>
+  <span class="nb">puts</span> <span class="s2">"***"</span>
+
   <span class="n">response</span> <span class="o">=</span> <span class="n">access_token</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s1">'/api/v3.0/get_current_user'</span><span class="p">)</span>
   <span class="n">res</span><span class="p">.</span><span class="nf">body</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="nf">body</span>
 <span class="k">end</span>
