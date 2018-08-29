@@ -38,6 +38,7 @@ If something in the API is confusing you, you can open an [issue](https://github
 ```ruby--oauth2
 #!/usr/bin/env ruby
 require 'oauth2' # gem 'oauth2'
+require 'pp'
 
 CONSUMER_KEY = <fill in your key>
 CONSUMER_SECRET = <fill in your secret>
