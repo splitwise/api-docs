@@ -5,6 +5,7 @@ language_tabs: # must be one of https://git.io/vQNgJ
   - ruby--oauth2
   - ruby--oauth1
   - javascript--oauth2
+  - javascript--sdk
 
 toc_footers:
   - <a href='https://secure.splitwise.com/apps'>Sign up for an API key</a>
@@ -222,6 +223,42 @@ function serverReady() {
 
 module.exports = client;
 
+```
+
+```javascript--sdk
+#!/usr/bin/env node
+'use strict';
+
+const Splitwise = require('splitwise');
+const express = require('express');
+const {exec} = require('child_process');
+
+const app = express();
+const port = 8080;
+
+const sw = Splitwise({
+  consumerKey: '<fill in your key>',
+  consumerSecret: '<fill in your secret>'
+});
+
+app.get('/', (req, res) => {
+  sw.getAccessToken().then(token => {
+    console.log(`Obtained access_token: ${token}`);
+  });
+  sw.getCurrentUser().then(data => res.send(data)).catch(console.log);
+});
+
+
+app.listen(port, () => {
+  console.log(`Server on port ${port} is now up`);
+  exec(`open http://localhost:${port}/`, (err, stdout, stderr) => {
+    if (err) {
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.log(`stderr: ${stderr}`);
+  });
+});
 ```
 
 Splitwise uses OAuth for authentication. To connect via OAuth, you'll need to [register your app](https://secure.splitwise.com/apps) on Splitwise. When you register, you'll be given a consumer key and a consumer secret, which can be used by your application to make requests to the Splitwise server.
