@@ -226,6 +226,9 @@
             <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
           </li>
           <li>
+            <a href="#third-party-sdks" class="toc-h1 toc-link" data-title="Third-party SDKs">Third-party SDKs</a>
+          </li>
+          <li>
             <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
           </li>
           <li>
@@ -376,8 +379,37 @@
 <p>If something in the API is confusing you, you can open an <a href="https://github.com/splitwise/api-docs/issues">issue</a> about it on GitHub. We&#39;re a small team, so we may not have an instant fix, but we&#39;ll get back to you as soon as we&#39;re able. (If you spot an issue in our API documentation itself, feel free to open a <a href="https://github.com/splitwise/api-docs/pulls">pull request</a> to update this website!)</p>
 
 <aside class="warning"> We're still in the process of creating this new API documentation site, so not all API calls are documented here yet. You can find our old API docs <a href="http://dev.splitwise.com">here</a> along with several discussions in the comments. </aside>
-<h1 id='authentication'>Authentication</h1><pre class="highlight ruby tab-ruby--oauth2"><code><span class="c1">#!/usr/bin/env ruby</span>
+<h1 id='third-party-sdks'>Third-party SDKs</h1>
+<p>The development community has built a number of unofficial, third-party SDKs for Splitwise in a variety of different languages.</p>
+
+<ul>
+<li>Javascript
+
+<ul>
+<li>https://github.com/keriwarr/splitwise</li>
+</ul></li>
+<li>Ruby
+
+<ul>
+<li>https://github.com/divyum/splitwise-ruby</li>
+</ul></li>
+<li>Python
+
+<ul>
+<li>https://github.com/namaggarwal/splitwise</li>
+</ul></li>
+</ul>
+
+<p>If you&#39;ve built a third-party SDK for Splitwise and you&#39;d like to see it included in this list, then please open a <a href="https://github.com/splitwise/api-docs/pulls">pull request</a> to update this section and add a new link. Thank you for your work!</p>
+
+<p><em>Note: These links are provided for convenience. These libraries have not been reviewed or endorsed by Splitwise, and Splitwise can not vouch for their quality. If you have questions or bug reports, please direct your feedback to the authors of these libraries.</em></p>
+<h1 id='authentication'>Authentication</h1><div class="highlight"><pre class="highlight ruby tab-ruby--oauth2"><code><span class="c1">###################</span>
+<span class="c1"># OAuth 2 example #</span>
+<span class="c1">###################</span>
+
+<span class="c1">#!/usr/bin/env ruby</span>
 <span class="nb">require</span> <span class="s1">'oauth2'</span> <span class="c1"># gem 'oauth2'</span>
+<span class="nb">require</span> <span class="s1">'pp'</span>
 
 <span class="no">CONSUMER_KEY</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">fill</span> <span class="k">in</span> <span class="n">your</span> <span class="n">key</span><span class="o">&gt;</span>
 <span class="no">CONSUMER_SECRET</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">fill</span> <span class="k">in</span> <span class="n">your</span> <span class="n">secret</span><span class="o">&gt;</span>
@@ -423,7 +455,13 @@
 <span class="c1"># Triggered by ^C on os x; run `$ stty -a |grep intr` to find appropriate key combination</span>
 <span class="nb">trap</span><span class="p">(</span><span class="s1">'INT'</span><span class="p">)</span> <span class="p">{</span> <span class="n">server</span><span class="p">.</span><span class="nf">stop</span> <span class="p">}</span>
 <span class="n">server</span><span class="p">.</span><span class="nf">start</span>
-</code></pre><pre class="highlight ruby tab-ruby--oauth1"><code><span class="c1">#!/usr/bin/env ruby</span>
+
+
+<span class="c1">###################</span>
+<span class="c1"># OAuth 1 example #</span>
+<span class="c1">###################</span>
+
+<span class="c1">#!/usr/bin/env ruby</span>
 <span class="nb">require</span> <span class="s1">'oauth'</span> <span class="c1"># gem oauth</span>
 
 <span class="no">CONSUMER_KEY</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">fill</span> <span class="k">in</span> <span class="n">your</span> <span class="n">key</span><span class="o">&gt;</span>
@@ -460,23 +498,27 @@
 <span class="c1"># Triggered by ^C on os x; run `$ stty -a |grep intr` to find appropriate key combination</span>
 <span class="nb">trap</span><span class="p">(</span><span class="s1">'INT'</span><span class="p">)</span> <span class="p">{</span> <span class="n">server</span><span class="p">.</span><span class="nf">stop</span> <span class="p">}</span>
 <span class="n">server</span><span class="p">.</span><span class="nf">start</span>
-</code></pre><pre class="highlight javascript tab-javascript--oauth2"><code><span class="cp">#!/usr/bin/env node
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="err">###################</span>
+<span class="err">#</span> <span class="nx">OAuth</span> <span class="mi">2</span> <span class="nx">example</span> <span class="err">#</span>
+<span class="err">###################</span><span class="cp">
+
+#!/usr/bin/env node
 </span><span class="s1">'use strict'</span><span class="p">;</span>
 
-<span class="kr">const</span> <span class="nx">OAuth</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'oauth'</span><span class="p">);</span>
-<span class="kr">const</span> <span class="p">{</span><span class="nx">exec</span><span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'child_process'</span><span class="p">);</span>
-<span class="kr">const</span> <span class="nx">qs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'querystring'</span><span class="p">);</span>
-<span class="kr">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'http'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">OAuth</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'oauth'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="p">{</span><span class="nx">exec</span><span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'child_process'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">qs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'querystring'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'http'</span><span class="p">);</span>
 
-<span class="kr">const</span> <span class="nx">CONSUMER_KEY</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">fill</span> <span class="k">in</span> <span class="nx">your</span> <span class="nx">key</span><span class="o">&gt;</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">CONSUMER_SECRET</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">fill</span> <span class="k">in</span> <span class="nx">your</span> <span class="nx">secret</span><span class="o">&gt;</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">TOKEN_URL</span> <span class="o">=</span> <span class="s1">'/oauth/token'</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">AUTHORIZE_URL</span> <span class="o">=</span> <span class="s1">'/oauth/authorize'</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">MY_CALLBACK_URL</span> <span class="o">=</span> <span class="s1">'http://localhost:8080/callback'</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">BASE_SITE</span> <span class="o">=</span> <span class="s1">'https://www.splitwise.com'</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">CONSUMER_KEY</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">fill</span> <span class="k">in</span> <span class="nx">your</span> <span class="nx">key</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">CONSUMER_SECRET</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">fill</span> <span class="k">in</span> <span class="nx">your</span> <span class="nx">secret</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">TOKEN_URL</span> <span class="o">=</span> <span class="s1">'/oauth/token'</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">AUTHORIZE_URL</span> <span class="o">=</span> <span class="s1">'/oauth/authorize'</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">MY_CALLBACK_URL</span> <span class="o">=</span> <span class="s1">'http://localhost:8080/callback'</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">BASE_SITE</span> <span class="o">=</span> <span class="s1">'https://www.splitwise.com'</span><span class="p">;</span>
 
 <span class="kd">var</span> <span class="nx">authURL</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OAuth</span><span class="p">.</span><span class="nx">OAuth2</span><span class="p">(</span>
+<span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OAuth</span><span class="p">.</span><span class="nx">OAuth2</span><span class="p">(</span>
   <span class="nx">CONSUMER_KEY</span><span class="p">,</span>
   <span class="nx">CONSUMER_SECRET</span><span class="p">,</span>
   <span class="nx">BASE_SITE</span><span class="p">,</span>
@@ -484,7 +526,7 @@
   <span class="nx">TOKEN_URL</span><span class="p">,</span>
   <span class="kc">null</span><span class="p">);</span>
 
-<span class="kr">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">);</span>
   <span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">);</span>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">p</span><span class="p">);</span>
@@ -527,7 +569,7 @@
         <span class="p">}</span>
         <span class="k">else</span> <span class="p">{</span>
           <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Obtained access_token: '</span><span class="p">,</span> <span class="nx">access_token</span><span class="p">);</span>
-          <span class="nx">client</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'https://secure.splitwise.com/api/v3.0/get_current_user'</span><span class="p">,</span> <span class="nx">access_token</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">client</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'https://secure.splitwise.com/api/v3.0/get_current_user'</span><span class="p">,</span> <span class="nx">access_token</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
             <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
           <span class="p">});</span>
@@ -555,8 +597,7 @@
 <span class="p">}</span>
 
 <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">client</span><span class="p">;</span>
-
-</code></pre>
+</code></pre></div>
 <p>Splitwise uses OAuth for authentication. To connect via OAuth, you&#39;ll need to <a href="https://secure.splitwise.com/apps">register your app</a> on Splitwise. When you register, you&#39;ll be given a consumer key and a consumer secret, which can be used by your application to make requests to the Splitwise server.</p>
 
 <aside class="notice">
@@ -578,7 +619,7 @@
 <blockquote>
 <p>Example Response:</p>
 </blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
     </span><span class="s2">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ada"</span><span class="p">,</span><span class="w">
@@ -600,7 +641,7 @@
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre>
+</span></code></pre></div>
 <p><code>GET https://www.splitwise.com/api/v3.0/get_current_user</code></p>
 
 <p>Retrieve info about the user who is currently logged in.</p>
@@ -608,7 +649,7 @@
 <blockquote>
 <p>Example Response:</p>
 </blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
     </span><span class="s2">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ada"</span><span class="p">,</span><span class="w">
@@ -623,7 +664,7 @@
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre>
+</span></code></pre></div>
 <p><code>GET https://www.splitwise.com/api/v3.0/get_user/:id</code></p>
 
 <p>Retrieve info about another user that the current user is acquainted with (e.g. they are friends, or they both belong to the same group).</p>
@@ -691,7 +732,7 @@
 <blockquote>
 <p>Example Response:</p>
 </blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"groups"</span><span class="p">:[</span><span class="w">
     </span><span class="err">//</span><span class="w"> </span><span class="err">Non-group</span><span class="w"> </span><span class="err">expenses</span><span class="w"> </span><span class="err">are</span><span class="w"> </span><span class="err">listed</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">group</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">id</span><span class="w"> </span><span class="mi">0</span><span class="w">
     </span><span class="p">{</span><span class="w">  
@@ -767,7 +808,7 @@
       </span><span class="s2">"invite_link"</span><span class="p">:</span><span class="s2">"https://www.splitwise.com/join/abcdef1232456"</span><span class="w">
     </span><span class="p">}</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre>
+</span></code></pre></div>
 <p><code>GET https://www.splitwise.com/api/v3.0/get_groups</code></p>
 
 <p>Returns list of all groups that the current_user belongs to</p>
@@ -775,7 +816,7 @@
 <blockquote>
 <p>Example Response:</p>
 </blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"group"</span><span class="p">:</span><span class="w">
     </span><span class="p">{</span><span class="w">  
       </span><span class="s2">"id"</span><span class="p">:</span><span class="mi">3018312</span><span class="p">,</span><span class="w">
@@ -804,7 +845,7 @@
       </span><span class="s2">"invite_link"</span><span class="p">:</span><span class="s2">"https://www.splitwise.com/join/abcdef1232456"</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre>
+</span></code></pre></div>
 <p><code>GET https://www.splitwise.com/api/v3.0/get_group/:id</code></p>
 
 <p>Returns information about the specified group (as long as the current user has access)</p>
@@ -812,7 +853,7 @@
 <blockquote>
 <p>Example Response:</p>
 </blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"group"</span><span class="p">:</span><span class="w">
     </span><span class="p">{</span><span class="w">  
       </span><span class="s2">"id"</span><span class="p">:</span><span class="mi">3018312</span><span class="p">,</span><span class="w">
@@ -829,7 +870,7 @@
       </span><span class="s2">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"something went wrong"</span><span class="p">,</span><span class="w"> </span><span class="s2">"with your group"</span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre>
+</span></code></pre></div>
 <p><code>POST https://secure.splitwise.com/api/v3.0/create_group</code></p>
 
 <p>Create a new group. Adds the current user to the group by default.</p>
@@ -890,10 +931,10 @@
 <blockquote>
 <p>Example Response:</p>
 </blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="kc">false</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre>
+</span></code></pre></div>
 <p><code>POST https://secure.splitwise.com/api/v3.0/delete_group/:id</code></p>
 
 <p>Delete an existing group. Destroys all associated records (expenses, etc.)</p>
@@ -901,7 +942,7 @@
 <blockquote>
 <p>Example Response:</p>
 </blockquote>
-<pre class="highlight json tab-json"><code></code></pre>
+<div class="highlight"><pre class="highlight json tab-json"><code></code></pre></div>
 <p>``</p>
 
 <p>Desc: </p>
@@ -909,11 +950,11 @@
 <blockquote>
 <p>Example Response:</p>
 </blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="err">//or</span><span class="w"> </span><span class="kc">false</span><span class="w">
   </span><span class="s2">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"any errors"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre>
+</span></code></pre></div>
 <p><code>POST https://secure.splitwise.com/api/v3.0/add_user_to_group</code></p>
 
 <p>Add a user to a group</p>
@@ -957,11 +998,11 @@
 <blockquote>
 <p>Example Response:</p>
 </blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="err">//or</span><span class="w"> </span><span class="kc">false</span><span class="w">
   </span><span class="s2">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"any errors"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre>
+</span></code></pre></div>
 <p><code>POST https://secure.splitwise.com/api/v3.0/remove_user_from_group</code></p>
 
 <p>Remove a user from a group if their balance is 0</p>
@@ -990,7 +1031,7 @@
 <blockquote>
 <p>Example Response:</p>
 </blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"friends"</span><span class="p">:[</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
@@ -1044,7 +1085,7 @@
     </span><span class="p">}</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre>
+</span></code></pre></div>
 <p><code>GET https://www.splitwise.com/api/v3.0/get_friends</code></p>
 
 <p>Returns a list of the current user&#39;s friends.</p>
@@ -1052,7 +1093,7 @@
 <blockquote>
 <p>Example Response:</p>
 </blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"friend"</span><span class="p">:</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
@@ -1107,7 +1148,7 @@
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre>
+</span></code></pre></div>
 <p><code>GET https://secure.splitwise.com/api/v3.0/get_group/:id</code></p>
 
 <p>Get detailed info on one group that current_user belongs to</p>
@@ -1188,15 +1229,15 @@
 <blockquote>
 <p>Example Response:</p>
 </blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="err">//or</span><span class="w"> </span><span class="kc">false</span><span class="w">
   </span><span class="s2">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"any errors"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre>
+</span></code></pre></div>
 <p><code>POST https://secure.splitwise.com/api/v3.0/delete_friend/:id</code></p>
 
 <p>Given a friend ID, break off the friendship between the current user and the specified user.</p>
-<h1 id='expenses'>Expenses</h1><h2 id='get_expenses'>get_expenses</h2><h2 id='get_expense-id'>get_expense/:id</h2><h2 id='create_expense'>create_expense</h2><h2 id='update_expense-id'>update_expense/:id</h2><h2 id='delete_expense-id'>delete_expense/:id</h2><h2 id='undelete_expense-id'>undelete_expense/:id</h2><h1 id='comments'>Comments</h1><h2 id='get_comments-expense_id-id'>get_comments?expense_id=<id></h2><h1 id='notifications'>Notifications</h1><h2 id='get_notifications'>get_notifications</h2><h1 id='other-api-calls'>Other API calls</h1><h2 id='get_currencies'>get_currencies</h2><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+<h1 id='expenses'>Expenses</h1><h2 id='get_expenses'>get_expenses</h2><h2 id='get_expense-id'>get_expense/:id</h2><h2 id='create_expense'>create_expense</h2><h2 id='update_expense-id'>update_expense/:id</h2><h2 id='delete_expense-id'>delete_expense/:id</h2><h2 id='undelete_expense-id'>undelete_expense/:id</h2><h1 id='comments'>Comments</h1><h2 id='get_comments-expense_id-id'>get_comments?expense_id=<id></h2><h1 id='notifications'>Notifications</h1><h2 id='get_notifications'>get_notifications</h2><h1 id='other-api-calls'>Other API calls</h1><h2 id='get_currencies'>get_currencies</h2><div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"currencies"</span><span class="p">:[</span><span class="w">
     </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"USD"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"ARS"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"$"</span><span class="w"> </span><span class="p">},</span><span class="w">
@@ -1330,7 +1371,7 @@
     </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"BTN"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"Nu."</span><span class="w"> </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">:</span><span class="s2">"WST"</span><span class="p">,</span><span class="w"> </span><span class="s2">"unit"</span><span class="p">:</span><span class="s2">"WS$"</span><span class="w"> </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"> 
-</span></code></pre>
+</span></code></pre></div>
 <p><code>GET https://secure.splitwise.com/api/v3.0/get_currencies</code></p>
 
 <p>Returns a list of all currencies allowed by the system.  These are mostly ISO 4217 codes, but we do sometimes use pending codes or unofficial, colloquial codes (like BTC instead of XBT for Bitcoin)</p>
