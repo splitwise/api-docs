@@ -33,6 +33,21 @@ If something in the API is confusing you, you can open an [issue](https://github
 
 <aside class="warning"> We're still in the process of creating this new API documentation site, so not all API calls are documented here yet. You can find our old API docs <a href="http://dev.splitwise.com">here</a> along with several discussions in the comments. </aside>
 
+# Third-party SDKs
+
+The development community has built a number of unofficial, third-party SDKs for Splitwise in a variety of different languages.
+
+- Javascript
+  - https://github.com/keriwarr/splitwise
+- Ruby
+  - https://github.com/divyum/splitwise-ruby
+- Python
+  - https://github.com/namaggarwal/splitwise
+
+If you've built a third-party SDK for Splitwise and you'd like to see it included in this list, then please open a [pull request](https://github.com/splitwise/api-docs/pulls) to update this section and add a new link. Thank you for your work!
+
+_Note: These links are provided for convenience. These libraries have not been reviewed or endorsed by Splitwise, and Splitwise can not vouch for their quality. If you have questions or bug reports, please direct your feedback to the authors of these libraries._
+
 # Authentication
 
 ```ruby--oauth2
