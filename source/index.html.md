@@ -36,6 +36,10 @@ If something in the API is confusing you, you can open an [issue](https://github
 # Authentication
 
 ```ruby--oauth2
+###################
+# OAuth 2 example #
+###################
+
 #!/usr/bin/env ruby
 require 'oauth2' # gem 'oauth2'
 require 'pp'
@@ -84,8 +88,12 @@ end
 # Triggered by ^C on os x; run `$ stty -a |grep intr` to find appropriate key combination
 trap('INT') { server.stop }
 server.start
-```
-```ruby--oauth1
+
+
+###################
+# OAuth 1 example #
+###################
+
 #!/usr/bin/env ruby
 require 'oauth' # gem oauth
 
@@ -125,7 +133,11 @@ trap('INT') { server.stop }
 server.start
 ```
 
-```javascript--oauth2
+```javascript
+###################
+# OAuth 2 example #
+###################
+
 #!/usr/bin/env node
 'use strict';
 
@@ -221,7 +233,6 @@ function serverReady() {
 }
 
 module.exports = client;
-
 ```
 
 Splitwise uses OAuth for authentication. To connect via OAuth, you'll need to [register your app](https://secure.splitwise.com/apps) on Splitwise. When you register, you'll be given a consumer key and a consumer secret, which can be used by your application to make requests to the Splitwise server.
