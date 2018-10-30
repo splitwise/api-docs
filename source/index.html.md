@@ -2,9 +2,8 @@
 title: Splitwise API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - ruby--oauth2
-  - ruby--oauth1
-  - javascript--oauth2
+  - ruby
+  - javascript
 
 toc_footers:
   - <a href='https://secure.splitwise.com/apps'>Sign up for an API key</a>
@@ -50,7 +49,7 @@ _Note: These links are provided for convenience. These libraries have not been r
 
 # Authentication
 
-```ruby--oauth2
+```ruby
 ###################
 # OAuth 2 example #
 ###################
