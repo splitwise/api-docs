@@ -45,7 +45,9 @@ The development community has built a number of unofficial, third-party SDKs for
 
 If you've built a third-party SDK for Splitwise and you'd like to see it included in this list, then please open a [pull request](https://github.com/splitwise/api-docs/pulls) to update this section and add a new link. Thank you for your work!
 
-_Note: These links are provided for convenience. These libraries have not been reviewed or endorsed by Splitwise, and Splitwise can not vouch for their quality. If you have questions or bug reports, please direct your feedback to the authors of these libraries._
+<aside class="notice">
+  Note: These links are provided for convenience. These libraries have not been reviewed or endorsed by Splitwise, and Splitwise can not vouch for their quality. If you have questions or bug reports, please direct your feedback to the authors of these libraries.
+</aside>
 
 # Authentication
 
