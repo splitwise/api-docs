@@ -37,11 +37,11 @@ If something in the API is confusing you, you can open an [issue](https://github
 The development community has built a number of unofficial, third-party SDKs for Splitwise in a variety of different languages.
 
 - Javascript
-  - https://github.com/keriwarr/splitwise
+  - [https://github.com/keriwarr/splitwise](https://github.com/keriwarr/splitwise)
 - Ruby
-  - https://github.com/divyum/splitwise-ruby
+  - [https://github.com/divyum/splitwise-ruby](https://github.com/divyum/splitwise-ruby)
 - Python
-  - https://github.com/namaggarwal/splitwise
+  - [https://github.com/namaggarwal/splitwise](https://github.com/namaggarwal/splitwise)
 
 If you've built a third-party SDK for Splitwise and you'd like to see it included in this list, then please open a [pull request](https://github.com/splitwise/api-docs/pulls) to update this section and add a new link. Thank you for your work!
 
