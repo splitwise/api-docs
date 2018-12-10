@@ -1,6 +1,6 @@
 # Welcome to the Splitwise API!
 
-This repo powers the official documentation for the Splitwise API. You can view our official API documentation website at [http://dev.beta.splitwise.com](http://dev.beta.splitwise.com).
+This repo powers the official documentation for the Splitwise API. You can view our official API documentation website at [http://dev.splitwise.com](http://dev.splitwise.com).
 
 ## Questions? Issues?
 
