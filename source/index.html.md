@@ -44,6 +44,8 @@ The development community has built a number of unofficial, third-party SDKs for
   - [https://github.com/namaggarwal/splitwise](https://github.com/namaggarwal/splitwise)
 - Elixir
   - [https://github.com/matiasdelgado/ex_splitwise](https://github.com/matiasdelgado/ex_splitwise)
+- Java
+  - [https://github.com/sritejakv/splitwise-java](https://github.com/sritejakv/splitwise-java)
 
 If you've built a third-party SDK for Splitwise and you'd like to see it included in this list, then please open a [pull request](https://github.com/splitwise/api-docs/pulls) to update this section and add a new link. Thank you for your work!
 
