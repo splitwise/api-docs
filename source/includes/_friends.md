@@ -129,9 +129,9 @@ Returns a list of the current user's friends.
 }
 ```
 
-`GET https://secure.splitwise.com/api/v3.0/get_group/:id`
+`GET https://secure.splitwise.com/api/v3.0/get_friend/:id`
 
-Get detailed info on one group that current_user belongs to
+Get detailed info on one friend of current_user.
 
 ## create_friend
 
