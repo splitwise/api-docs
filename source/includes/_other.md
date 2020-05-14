@@ -136,7 +136,7 @@
     { "currency_code":"VUV", "unit":"Vt" },
     { "currency_code":"BTN", "unit":"Nu." },
     { "currency_code":"WST", "unit":"WS$" }
-  ] } 
+  ] }
 ```
 
 `GET https://secure.splitwise.com/api/v3.0/get_currencies`
@@ -145,5 +145,85 @@ Returns a list of all currencies allowed by the system.  These are mostly ISO 42
 
 ## get_categories
 
+```json
+{
+  "categories": [
+    {
+      "id": 19,
+      "name": "Entertainment",
+      "icon": "https://s3.amazonaws.com/splitwise/uploads/category/icon/square/entertainment/other.png",
+      "icon_types": {
+        "slim": {
+          "small": "https://s3.amazonaws.com/splitwise/uploads/category/icon/slim/entertainment/other.png",
+          "large": "https://s3.amazonaws.com/splitwise/uploads/category/icon/slim/entertainment/other@2x.png"
+        },
+        "square": {
+          "large": "https://s3.amazonaws.com/splitwise/uploads/category/icon/square_v2/entertainment/other@2x.png",
+          "xlarge": "https://s3.amazonaws.com/splitwise/uploads/category/icon/square_v2/entertainment/other@3x.png"
+        }
+      },
+      "subcategories": [
+        {
+          "id": 20,
+          "name": "Games",
+          "icon": "https://s3.amazonaws.com/splitwise/uploads/category/icon/square/entertainment/games.png",
+          "icon_types": {
+            "slim": {
+              "small": "https://s3.amazonaws.com/splitwise/uploads/category/icon/slim/entertainment/games.png",
+              "large": "https://s3.amazonaws.com/splitwise/uploads/category/icon/slim/entertainment/games@2x.png"
+            },
+            "square": {
+              "large": "https://s3.amazonaws.com/splitwise/uploads/category/icon/square_v2/entertainment/games@2x.png",
+              "xlarge": "https://s3.amazonaws.com/splitwise/uploads/category/icon/square_v2/entertainment/games@3x.png"
+            }
+          }
+        },
+        {
+          "id": 21,
+          "name": "Movies",
+          "icon": "https://s3.amazonaws.com/splitwise/uploads/category/icon/square/entertainment/movies.png",
+          "icon_types": {
+            "slim": {
+              "small": "https://s3.amazonaws.com/splitwise/uploads/category/icon/slim/entertainment/movies.png",
+              "large": "https://s3.amazonaws.com/splitwise/uploads/category/icon/slim/entertainment/movies@2x.png"
+            },
+            "square": {
+              "large": "https://s3.amazonaws.com/splitwise/uploads/category/icon/square_v2/entertainment/movies@2x.png",
+              "xlarge": "https://s3.amazonaws.com/splitwise/uploads/category/icon/square_v2/entertainment/movies@3x.png"
+            }
+          }
+        } //, ...
+      ]
+    } //, ...
+  ]
+}
+```
+
+`GET https://secure.splitwise.com/api/v3.0/get_categories`
+
+Returns a list of all categories Splitwise allows for expenses. There are parent categories that represent groups of categories with subcategories for more specific categorization. You may not use the parent categories when creating expenses. If you intend for an expense to be represented by the parent category and nothing more specific, please use the `"Other"` subcategory.
+
 ## parse_sentence
 
+```json
+{
+  "expense": { /* <Expense object> */ },
+  "valid": true, //or false
+  "error": "an error message"
+}
+```
+
+`POST https://secure.splitwise.com/api/v3.0/parse_sentence`
+
+Attempts to create an expense from the `input` as an English natural language phrase like `"groceries $20"` or `"Jon paid me $50"`. If `valid` is `true`, the `expense` value will be a complete and valid expense. If it is `false`, the `expense` value may be missing some values.
+
+### Query Parameters
+
+<aside class="notice">You must include the input parameter, but all other parameters are optional. If you set the group_id or friend_id, the parser will try to create an expense for that friend or group. You may not include both of these parameters</aside>
+
+Parameter | Type | Description
+--------- | ---- | -----------
+input     | String  | A natural language sentence describing an expense
+group_id  | Integer | A group id
+friend_id | Integer | A friend id
+autosave  | Boolean | If true, will save the resulting expense if valid. Defaults to false.

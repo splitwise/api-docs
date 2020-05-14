@@ -166,10 +166,10 @@ Make the current user a friend of the specified users.
 
 Parameter | Type | Description
 --------- | ---- | -----------
-friends__0__user_first_name | String | Add a user's first name
-friends__0__user_last_name | String | Add a user's last name
-friends__0__user_email | String | Add a user's email (or find an existing user by email)
-friends__1__user_email | String | Find an existing user by email)
+friends\__0\__user_first_name | String | Add a user's first name
+friends\__0\__user_last_name  | String | Add a user's last name
+friends\__0\__user_email      | String | Add a user's email (or find an existing user by email)
+friends\__1\__user_email      | String | Find an existing user by email)
 
 ## delete_friend/:id
 
