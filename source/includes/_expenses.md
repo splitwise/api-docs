@@ -122,7 +122,7 @@ Parameter | Type | Description
 --------- | ---- | -----------
 group_id              | Integer | The group to put this expense in.
 split_equally         | Boolean | Set this to `true` if using it
-users\__0\__id         | Integer | The user id of a friend for this share
+users\__0\__user_id    | Integer | The user id of a friend for this share
 users\__0\__paid_share | String  | Decimal amount as a string with 2 decimal places. The amount this user paid for the expense
 users\__0\__owed_share | String  | Decimal amount as a string with 2 decimal places. The amount this user owes on the expense
 users\__1\__first_name | String  |
