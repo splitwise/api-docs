@@ -86,7 +86,7 @@ Parameter | Type | Description
 --------- | ---- | -----------
 group_id        | Integer | Return expenses for specific group
 friend_id       | Integer | Return expenses for a specific friend that are not in any group
-dated_after     | Time    | ISO 8601 Date time. Return expenses later that this date
+dated_after     | Time    | ISO 8601 Date time. Return expenses later than this date
 dated_before    | Time    | ISO 8601 Date time. Return expenses earlier than this date
 updated_after   | Time    | ISO 8601 Date time. Return expenses updated after this date
 updated_before  | Time    | ISO 8601 Date time. Return expenses updated before this date
