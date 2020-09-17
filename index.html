@@ -229,6 +229,11 @@
           </li>
           <li>
             <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#api-keys" class="toc-h2 toc-link" data-title="Authentication">API keys</a>
+                  </li>
+              </ul>
           </li>
           <li>
             <a href="#an-important-note-about-nested-parameters" class="toc-h1 toc-link" data-title="An important note about nested parameters">An important note about nested parameters</a>
@@ -628,6 +633,13 @@
 <li>The term.ie <a href="http://term.ie/oauth/example/">OAuth test server</a> (great for debugging authorization issues)</li>
 <li>This old <a href="https://blog.splitwise.com/2013/07/15/setting-up-oauth-for-the-splitwise-api/">Splitwise blog post</a> about OAuth</li>
 </ul>
+<h2 id='api-keys'>API keys</h2><div class="highlight"><pre class="highlight http tab-http"><code><span class="nf">GET</span> <span class="nn">/api/v3.0/get_current_user</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">www.splitwise.com</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">Bearer &lt;your_token_here&gt;</span>
+</code></pre></div>
+<p>For speed and ease of prototyping, you can generate a personal API key on your app&#39;s details page. You should present this key to the server via the <code>Authorization</code> header as a Bearer token. The API key is an access token for your personal account, so keep it as safe as you would a password.</p>
+
+<p>If your key becomes compromised or you want to invalidate your existing key for any other reason, you can do so on the app details page by generating a new key.</p>
 <h1 id='an-important-note-about-nested-parameters'>An important note about nested parameters</h1>
 <p>Due to a quirk in Splitwise&#39;s servers, nested parameters (e.g. <code>users[1][first_name]</code>) cannot currently be used when submitting a request. Instead, to indicate nested parameters, use double underscores (e.g. <code>users__1__first_name</code>). We hope to support proper nested parameters in future API versions.</p>
 <h1 id='users'>Users</h1>
