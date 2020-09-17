@@ -266,6 +266,18 @@ For more information on using OAuth, check out the following resources:
 - The term.ie [OAuth test server](http://term.ie/oauth/example/) (great for debugging authorization issues)
 - This old [Splitwise blog post](https://blog.splitwise.com/2013/07/15/setting-up-oauth-for-the-splitwise-api/) about OAuth
 
+## API keys
+
+```http
+GET /api/v3.0/get_current_user HTTP/1.1
+Host: www.splitwise.com
+Authorization: Bearer <your_token_here>
+```
+
+For speed and ease of prototyping, you can generate a personal API key on your app's details page. You should present this key to the server via the `Authorization` header as a Bearer token. The API key is an access token for your personal account, so keep it as safe as you would a password.
+
+If your key becomes compromised or you want to invalidate your existing key for any other reason, you can do so on the app details page by generating a new key.
+
 # An important note about nested parameters
 
 Due to a quirk in Splitwise's servers, nested parameters (e.g. `users[1][first_name]`) cannot currently be used when submitting a request. Instead, to indicate nested parameters, use double underscores (e.g. `users__1__first_name`). We hope to support proper nested parameters in future API versions.
