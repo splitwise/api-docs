@@ -35,6 +35,7 @@ The development community has built a number of unofficial, third-party SDKs for
 
 - Javascript
   - [https://github.com/keriwarr/splitwise](https://github.com/keriwarr/splitwise)
+  - [https://github.com/Bearer/Pizzly](https://github.com/Bearer/Pizzly)
 - Ruby
   - [https://github.com/divyum/splitwise-ruby](https://github.com/divyum/splitwise-ruby)
 - Python
