@@ -168,7 +168,7 @@ Parameter | Type | Description
 --------- | ---- | -----------
 name | String | Group name
 whiteboard             | String  | Text to display on the group whiteboard
-group_type             | String  | What the group is being used for (apartment, trip, couple, etc.)
+group_type             | String  | What the group is being used for. Must be one of: `apartment`, `house`, `trip`, `other`.
 simplify_by_default    | Boolean | Turn on simplify debts?
 users\__0\__first_name | String  | Add a user's first name
 users\__0\__last_name  | String  | Add a user's last name
