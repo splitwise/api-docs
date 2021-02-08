@@ -1,0 +1,17 @@
+type: object
+properties:
+  id:
+    type: integer
+    example: 491923
+  first_name:
+    type: string
+    example: Jane
+  last_name:
+    type: string
+    example: Doe
+  picture:
+    type: object
+    properties:
+      medium:
+        type: string
+        example: image_url

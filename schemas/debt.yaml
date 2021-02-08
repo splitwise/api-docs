@@ -1,0 +1,16 @@
+type: object
+properties:
+  from:
+    type: integer
+    example: 18523
+    description: User ID
+  to:
+    type: integer
+    example: 90261
+    description: User ID
+  amount:
+    type: string
+    example: "414.5"
+  currency_code:
+    type: string
+    example: "USD"

@@ -1,0 +1,80 @@
+type: object
+properties:
+  id:
+    type: integer
+    example: 321
+  name:
+    type: string
+    example: "Housemates 2020"
+  group_type:
+    type: string
+    enum: [apartment, house, trip, other]
+    example: "apartment"
+  updated_at:
+    type: string
+    format: date-time
+  simplify_by_default:
+    type: boolean
+  members:
+    type: array
+    items:
+      allOf:
+        - $ref: ./user.yaml
+        - type: object
+          properties:
+            balance:
+              type: array
+              items:
+                type: object
+                properties:
+                  currency_code:
+                    type: string
+                    example: "USD"
+                  amount:
+                    type: string
+                    example: "-5.02"
+  original_debts:
+    type: array
+    items:
+      $ref: ./debt.yaml
+  simplified_debts:
+    type: array
+    items:
+      $ref: ./debt.yaml
+  avatar:
+    type: object
+    properties:
+      original:
+        type: string
+        nullable: true
+        example: null
+      xxlarge:
+        type: string
+        example: "https://s3.amazonaws.com/splitwise/uploads/group/default_avatars/avatar-ruby2-house-1000px.png"
+      xlarge:
+        type: string
+        example: "https://s3.amazonaws.com/splitwise/uploads/group/default_avatars/avatar-ruby2-house-500px.png"
+      large:
+        type: string
+        example: "https://s3.amazonaws.com/splitwise/uploads/group/default_avatars/avatar-ruby2-house-200px.png"
+      medium:
+        type: string
+        example: "https://s3.amazonaws.com/splitwise/uploads/group/default_avatars/avatar-ruby2-house-100px.png"
+      small:
+        type: string
+        example: "https://s3.amazonaws.com/splitwise/uploads/group/default_avatars/avatar-ruby2-house-50px.png"
+  custom_avatar:
+    type: boolean
+  cover_photo:
+    type: object
+    properties:
+      xxlarge:
+        type: string
+        example: "https://s3.amazonaws.com/splitwise/uploads/group/default_cover_photos/coverphoto-ruby-1000px.png"
+      xlarge:
+        type: string
+        example: "https://s3.amazonaws.com/splitwise/uploads/group/default_cover_photos/coverphoto-ruby-500px.png"
+  invite_link:
+    type: string
+    example: "https://www.splitwise.com/join/abQwErTyuI+12"
+    description: "A link the user can send to a friend to join the group directly"

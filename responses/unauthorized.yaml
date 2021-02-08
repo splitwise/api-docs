@@ -1,0 +1,5 @@
+description: "Invalid API key or OAuth access token"
+content:
+  application/json:
+    schema:
+      $ref: ../schemas/errors/unauthorized.yaml

@@ -1,0 +1,74 @@
+---
+post:
+  tags:
+  - groups
+  summary: Add a user to a group
+  description: "**Note**: 200 OK does not indicate a successful response. You must
+    check the `success` value of the response.\n"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          oneOf:
+          - type: object
+            title: User ID
+            properties:
+              group_id:
+                type: integer
+                example: 49012
+              user_id:
+                type: integer
+                example: 7999632
+            required:
+            - user_id
+          - type: object
+            title: User info
+            properties:
+              group_id:
+                type: integer
+                example: 49012
+              first_name:
+                type: string
+                example: Grace
+              last_name:
+                type: string
+                example: Hopper
+              email:
+                type: string
+                example: gracehopper@example.com
+            required:
+            - first_name
+            - last_name
+            - email
+          required:
+          - group_id
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              user:
+                "$ref": "../schemas/user.yaml"
+              errors:
+                type: object
+                additionalProperties:
+                  type: array
+          examples:
+            Success:
+              value:
+                success: true
+                user: {}
+                errors: []
+            Failure:
+              value:
+                success: false
+                user: 
+                errors:
+                  base:
+                  - That user cannot be a member of this group

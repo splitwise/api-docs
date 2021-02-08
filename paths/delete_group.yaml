@@ -1,0 +1,29 @@
+---
+post:
+  tags:
+  - groups
+  summary: Delete a group
+  description: Delete an existing group. Destroys all associated records (expenses,
+    etc.)
+  parameters:
+  - in: path
+    name: id
+    schema:
+      type: integer
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+    '401':
+      "$ref": "../responses/unauthorized.yaml"
+    '403':
+      "$ref": "../responses/forbidden.yaml"
+    '404':
+      "$ref": "../responses/not_found.yaml"

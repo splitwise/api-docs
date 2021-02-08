@@ -1,0 +1,47 @@
+---
+parameters:
+- in: path
+  name: id
+  description: User ID of the friend
+  schema:
+    type: integer
+  required: true
+post:
+  tags:
+  - friends
+  summary: Delete friendship
+  description: |
+    Given a friend ID, break off the friendship between the current user and the specified user.
+
+    **Note**: 200 OK does not indicate a successful response. You must check the `success` value of the response.
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              errors:
+                type: object
+                additionalProperties:
+                  type: array
+          examples:
+            Success:
+              value:
+                success: true
+                errors: []
+            Failure:
+              value:
+                success: false
+                errors:
+                  base:
+                  - There was an issue deleting that friendship
+    '401':
+      "$ref": "../responses/unauthorized.yaml"
+    '403':
+      "$ref": "../responses/forbidden.yaml"
+    '404':
+      "$ref": "../responses/not_found.yaml"

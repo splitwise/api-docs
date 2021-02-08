@@ -1,0 +1,6 @@
+type: object
+description: "User's notification preferences"
+additionalProperties:
+  type: boolean
+example:
+  added_as_friend: true

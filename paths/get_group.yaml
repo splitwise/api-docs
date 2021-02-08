@@ -1,0 +1,27 @@
+---
+parameters:
+- in: path
+  name: id
+  schema:
+    type: integer
+  required: true
+get:
+  tags:
+  - groups
+  summary: Get information about a group
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              group:
+                "$ref": "../schemas/group.yaml"
+    '401':
+      "$ref": "../responses/unauthorized.yaml"
+    '403':
+      "$ref": "../responses/forbidden.yaml"
+    '404':
+      "$ref": "../responses/not_found.yaml"

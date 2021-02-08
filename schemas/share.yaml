@@ -1,0 +1,16 @@
+type: object
+properties:
+  user:
+    $ref: ./comment_user.yaml
+  user_id:
+    type: integer
+    example: 491923
+  paid_share:
+    type: string
+    example: "8.99"
+  owed_share:
+    type: string
+    example: "4.5"
+  net_balance:
+    type: string
+    example: "4.49"

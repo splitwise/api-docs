@@ -1,0 +1,21 @@
+allOf:
+- $ref: ./user.yaml
+- type: object
+  properties:
+    notifications_read:
+      type: string
+      example: "2017-06-02T20:21:57Z"
+      description: "ISO 8601 date/time indicating the last time notifications were read"
+    notifications_count:
+      type: integer
+      example: 12
+      description: "Number of unread notifications since notifiations_read"
+    notifications:
+      $ref: ./notification_settings.yaml
+    default_currency:
+      type: string
+      example: "USD"
+    locale:
+      type: string
+      example: "en"
+      description: "ISO_639-1 2-letter locale code"

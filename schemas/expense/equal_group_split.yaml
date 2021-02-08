@@ -1,0 +1,11 @@
+allOf:
+- $ref: ./common.yaml
+- type: object
+  properties:
+    split_equally:
+      type: boolean
+      enum: [true]
+- required:
+  - group_id
+  - split_equally
+    

@@ -1,0 +1,25 @@
+type: object
+properties:
+  id:
+    type: integer
+  first_name:
+    type: string
+    example: "Ada"
+  last_name:
+    type: string
+    example: "Lovelace"
+  email:
+    type: string
+    example: "ada@example.com"
+  registration_status:
+    type: string
+    enum: [confirmed, dummy, invited]
+  picture:
+    type: object
+    properties:
+      small:
+        type: string
+      medium:
+        type: string
+      large:
+        type: string
