@@ -1,0 +1,21 @@
+---
+get:
+  tags:
+  - groups
+  summary: List the current user's groups
+  description: "**Note**: Expenses that are not associated with a group are listed
+    in a group with ID 0.\n"
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              groups:
+                type: array
+                items:
+                  "$ref": "../schemas/group.yaml"
+    '401':
+      "$ref": "../responses/unauthorized.yaml"

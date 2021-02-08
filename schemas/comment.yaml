@@ -1,0 +1,27 @@
+type: object
+properties:
+  id:
+    type: integer
+    example: 79800950
+  content:
+    type: string
+    example: "John D. updated this transaction: - The cost changed from $6.99 to $8.99"
+  comment_type:
+    type: string
+    enum: [System, User]
+  relation_type:
+    type: string
+    enum: [ExpenseComment]
+  relation_id:
+    type: integer
+    example: 855870953
+    description: ID of the subject of the comment
+  created_at:
+    type: string
+    format: date-time
+  deleted_at:
+    type: string
+    format: date-time
+    nullable: true
+  user:
+    - $ref: ./comment_user.yaml

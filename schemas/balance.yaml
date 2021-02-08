@@ -1,0 +1,8 @@
+type: object
+properties:
+  currency_code:
+    type: string
+    example: "USD"
+  amount:
+    type: string
+    example: "414.5"

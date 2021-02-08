@@ -1,0 +1,144 @@
+allOf:
+  - $ref: ./expense/common.yaml
+  - type: object
+    properties:
+      id:
+        type: integer
+        example: 51023
+      group_id:
+        type: integer
+        example: 391
+        nullable: true
+        description: Null if the expense is not associated with a group.
+      friendship_id:
+        type: integer
+        example: 4818
+        nullable: true
+        description: Null if the expense is not associated with a friendship.
+      expense_bundle_id:
+        type: integer
+        example: 491030
+        nullable: true
+      description:
+        type: string
+        example: "Brunch"
+      repeats:
+        type: boolean
+        description: Whether the expense recurs automatically
+      repeat_interval:
+        type: string
+        enum: [never, weekly, fortnightly, monthly, yearly]
+      email_reminder:
+        type: boolean
+        description: |
+          Whether a reminder will be sent to involved users in advance of the next occurrence of a recurring expense.
+          Only applicable if the expense recurs.
+      email_reminder_in_advance:
+        type: integer
+        description: |
+          Number of days in advance to remind involved users about the next occurrence of a new expense.
+          Only applicable if the expense recurs.
+        enum: [null, -1, 0, 1, 2, 3, 4, 5, 6, 7, 14]
+        nullable: true
+      next_repeat:
+        type: string
+        nullable: true
+        description:
+          The date of the next occurrence of a recurring expense.
+          Only applicable if the expense recurs.
+      details:
+        type: string
+        description: Also known as "notes."
+        nullable: true
+      comments_count:
+        type: integer
+      payment:
+        type: boolean
+        description: Whether this was a payment between users
+      transaction_confirmed:
+        type: boolean
+        description: If a payment was made via an integrated third party service, whether it was confirmed by that service.
+      cost:
+        type: string
+        example: "25.0"
+      currency_code:
+        type: string
+        example: "USD"
+      repayments:
+        type: array
+        items:
+          type: object
+          properties:
+            from:
+              type: integer
+              description: ID of the owing user
+              example: 6788709
+            to:
+              type: integer
+              description: ID of the owed user
+              example: 270896089
+            amount:
+              type: string
+              example: "25.0"
+      date:
+        type: string
+        format: date-time
+        description: The date and time the expense took place. May differ from `created_at`
+        example: "2012-05-02T13:00:00Z"
+      created_at:
+        type: string
+        format: date-time
+        description: The date and time the expense was created on Splitwise
+        example: "2012-07-27T06:17:09Z"
+      created_by:
+        allOf:
+          - $ref: ./user.yaml
+          - nullable: true
+      updated_at:
+        type: string
+        description: The last time the expense was updated.
+        format: date-time
+        example: "2012-12-23T05:47:02Z"
+      updated_by:
+        allOf:
+          - $ref: ./user.yaml
+          - nullable: true
+      deleted_at:
+        type: string
+        description: If the expense was deleted, when it was deleted.
+        format: date-time
+        example: "2012-12-23T05:47:02Z"
+        nullable: true
+      deleted_by:
+        allOf:
+          - $ref: ./user.yaml
+          - nullable: true
+      category:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 5
+          name:
+            type: string
+            example: Electricity
+            description: Translated to the current user's locale
+      receipt:
+        type: object
+        properties:
+          large:
+            type: string
+            nullable: true
+            example: https://splitwise.s3.amazonaws.com/uploads/expense/receipt/3678899/large_95f8ecd1-536b-44ce-ad9b-0a9498bb7cf0.png
+          original:
+            type: string
+            nullable: true
+            example: https://splitwise.s3.amazonaws.com/uploads/expense/receipt/3678899/95f8ecd1-536b-44ce-ad9b-0a9498bb7cf0.png
+      users:
+        type: array
+        items:
+          $ref: ./share.yaml
+      comments:
+        type: array
+        items:
+          $ref: ./comment.yaml

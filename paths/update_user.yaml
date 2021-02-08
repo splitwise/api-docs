@@ -1,0 +1,40 @@
+---
+parameters:
+- in: path
+  name: id
+  schema:
+    type: integer
+  required: true
+post:
+  tags:
+  - users
+  summary: Update a user
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          properties:
+            first_name:
+              type: string
+            last_name:
+              type: string
+            email:
+              type: string
+            password:
+              type: string
+            locale:
+              type: string
+            default_currency:
+              type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            "$ref": "../schemas/user.yaml"
+    '401':
+      "$ref": "../responses/unauthorized.yaml"
+    '403':
+      "$ref": "../responses/forbidden.yaml"

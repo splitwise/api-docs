@@ -1,0 +1,38 @@
+---
+type: object
+properties:
+  id:
+    type: integer
+    example: 32514315
+  type:
+    type: integer
+  created_at:
+    type: string
+    format: date-time
+  created_by:
+    type: integer
+    example: 2
+  source:
+    type: object
+    nullable: true
+    properties:
+      type:
+        type: string
+        example: "Expense"
+      id:
+        type: integer
+        example: 865077
+      url:
+        type: string
+        nullable: true
+  image_url:
+    type: string
+    example: "https://s3.amazonaws.com/splitwise/uploads/notifications/v2/0-venmo.png"
+  image_shape:
+    type: string
+    enum:
+    - "square"
+    - "circle"
+  content:
+    type: string
+    example: <strong>You</strong> paid <strong>Jon H.</strong>.<br><font color=\"#5bc5a7\">You paid $23.45</font>

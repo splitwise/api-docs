@@ -1,0 +1,42 @@
+---
+post:
+  tags:
+  - expenses
+  summary: Create an expense
+  description: |
+    Creates an expense. You may either split an expense equally (only with `group_id` provided),
+    or supply a list of shares.
+
+    If providing a list of shares, each share must include `paid_share` and `owed_share`, and must be identified by one of the following:
+    - `email`, `first_name`, and `last_name`
+    - `user_id`
+
+    **Note**: 200 OK does not indicate a successful response. The operation was successful only if `errors` is empty.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          oneOf:
+          - "$ref": "../schemas/expense/equal_group_split.yaml"
+            title: Equal group split
+          - "$ref": "../schemas/expense/by_shares.yaml"
+            title: Split by shares
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              expenses:
+                type: array
+                items:
+                  "$ref": "../schemas/expense.yaml"
+              errors:
+                type: object
+    '401':
+      "$ref": "../responses/unauthorized.yaml"
+    '403':
+      "$ref": "../responses/forbidden.yaml"

@@ -1,0 +1,13 @@
+---
+allOf:
+- $ref: ./category.yaml
+- type: object
+  properties:
+    id:
+      example: 1
+    name:
+      example: Utilities
+    subcategories:
+      type: array
+      items:
+        $ref: ./category.yaml

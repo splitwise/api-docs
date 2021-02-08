@@ -1,0 +1,57 @@
+---
+/get_current_user:
+  $ref: ./get_current_user.yaml
+/get_user/{id}:
+  $ref: ./get_user.yaml
+/update_user/{id}:
+  $ref: ./update_user.yaml
+/get_groups:
+  $ref: ./get_groups.yaml
+/get_group/{id}:
+  $ref: ./get_group.yaml
+/create_group:
+  $ref: ./create_group.yaml
+/delete_group/{id}:
+  $ref: ./delete_group.yaml
+/undelete_group/{id}:
+  $ref: ./undelete_group.yaml
+/add_user_to_group:
+  $ref: ./add_user_to_group.yaml
+/remove_user_from_group:
+  $ref: ./remove_user_from_group.yaml
+/get_friends:
+  $ref: ./get_friends.yaml
+/get_friend/{id}:
+  $ref: ./get_friend.yaml
+/create_friend:
+  $ref: ./create_friend.yaml
+/create_friends:
+  $ref: ./create_friends.yaml
+/delete_friend/{id}:
+  $ref: ./delete_friend.yaml
+/get_currencies:
+  $ref: ./get_currencies.yaml
+/get_expense/{id}:
+  $ref: ./get_expense.yaml
+/get_expenses:
+  $ref: ./get_expenses.yaml
+/create_expense:
+  $ref: ./create_expense.yaml
+/update_expense/{id}:
+  $ref: ./update_expense.yaml
+/delete_expense/{id}:
+  $ref: ./delete_expense.yaml
+/undelete_expense/{id}:
+  $ref: ./undelete_expense.yaml
+/get_comments:
+  $ref: ./get_comments.yaml
+/create_comment:
+  $ref: ./create_comment.yaml
+/delete_comment:
+  $ref: ./delete_comment.yaml
+/get_notifications:
+  $ref: ./get_notifications.yaml
+/get_categories:
+  $ref: ./get_categories.yaml
+/parse_sentence:
+  $ref: ./parse_sentence.yaml

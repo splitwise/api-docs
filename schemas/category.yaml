@@ -1,0 +1,33 @@
+---
+type: object
+properties:
+  id:
+    type: integer
+    example: 48
+  name:
+    type: string
+    example: Cleaning
+  icon:
+    type: string
+    example: https://s3.amazonaws.com/splitwise/uploads/category/icon/square/utilities/cleaning.png
+  icon_types:
+    type: object
+    properties:
+      slim:
+        type: object
+        properties:
+          small:
+            type: string
+            format: uri
+          large:
+            type: string
+            format: uri
+      square:
+        type: object
+        properties:
+          large:
+            type: string
+            format: uri
+          xlarge:
+            type: string
+            format: uri

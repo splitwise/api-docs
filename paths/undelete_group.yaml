@@ -1,0 +1,40 @@
+---
+parameters:
+- in: path
+  name: id
+  schema:
+    type: integer
+  required: true
+post:
+  tags:
+  - groups
+  summary: Restore a group
+  description: |
+    Restores a deleted group.
+
+    **Note**: 200 OK does not indicate a successful response. You must check the `success` value of the response.
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              errors:
+                type: array
+          examples:
+            Success:
+              value:
+                success: true
+            Failure:
+              value:
+                success: false
+                errors:
+                - You do not have permission to undelete this group.
+    '401':
+      "$ref": "../responses/unauthorized.yaml"
+    '403':
+      "$ref": "../responses/forbidden.yaml"

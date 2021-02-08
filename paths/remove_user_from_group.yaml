@@ -1,0 +1,50 @@
+---
+post:
+  tags:
+  - groups
+  summary: Remove a user from a group
+  description: |
+    Remove a user from a group. Does not succeed if the user has a non-zero balance.
+
+    **Note:** 200 OK does not indicate a successful response. You must check the success value of the response.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            group_id:
+              type: integer
+              example: 4012
+            user_id:
+              type: integer
+              example: 940142
+          required:
+          - user_id
+          - group_id
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              errors:
+                type: object
+                additionalProperties:
+                  type: array
+          examples:
+            Success:
+              value:
+                success: true
+                errors: []
+            Failure:
+              value:
+                success: false
+                errors:
+                  base:
+                  - The user has a non-zero balance

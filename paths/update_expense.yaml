@@ -1,0 +1,43 @@
+---
+params:
+- in: query
+  name: id
+  description: ID of the expense to update
+post:
+  tags:
+  - expenses
+  summary: Update an expense
+  description: |
+    Updates an expense. Parameters are the same as in `create_expense`, but you only need to include parameters
+    that are changing from the previous values. If any values is supplied for `users__{index}__{property}`, _all_
+    shares for the expense will be overwritten with the provided values.
+
+    **Note**: 200 OK does not indicate a successful response. The operation was successful only if `errors` is empty.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          oneOf:
+          - "$ref": "../schemas/expense/equal_group_split.yaml"
+            title: Equal group split
+          - "$ref": "../schemas/expense/by_shares.yaml"
+            title: Split by shares
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              expenses:
+                type: array
+                items:
+                  "$ref": "../schemas/expense.yaml"
+              errors:
+                type: object
+    '401':
+      "$ref": "../responses/unauthorized.yaml"
+    '403':
+      "$ref": "../responses/forbidden.yaml"

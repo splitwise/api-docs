@@ -1,0 +1,33 @@
+type: object
+properties:
+  cost:
+    type: string
+    example: "25"
+    description: A string representation of a decimal value, limited to 2 decimal places
+  group_id:
+      type: integer
+      description: The group to put this expense in
+  description:
+    type: string
+    description: A short description of the expense
+    example: Grocery run
+  details:
+    type: string
+    description: Also known as "notes."
+    nullable: true
+  date:
+    type: string
+    description: The date and time the expense took place. May differ from `created_at`
+    format: date-time
+    example: "2012-05-02T13:00:00Z"
+  repeat_interval:
+    type: string
+    enum: [never, weekly, fortnightly, monthly, yearly]
+  currency_code:
+    type: string
+    example: "USD"
+    description: A currency code. Must be in the list from `get_currencies`
+  category_id:
+    type: integer
+    description: A category id from `get_categories`
+    example: 15

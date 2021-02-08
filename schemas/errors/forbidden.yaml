@@ -1,0 +1,11 @@
+type: object
+properties:
+  errors:
+    type: object
+    properties:
+      base:
+        type: array
+        items:
+          type: string
+          example:
+            "Invalid API request: you do not have permission to perform that action"

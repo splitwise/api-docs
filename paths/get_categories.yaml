@@ -1,0 +1,22 @@
+---
+get:
+  tags:
+  - other
+  summary: Supported categories
+  security: []
+  description: |
+    Returns a list of all categories Splitwise allows for expenses. There are parent categories that represent groups of categories with subcategories for more specific categorization.
+    When creating expenses, you must use a subcategory, not a parent category.
+    If you intend for an expense to be represented by the parent category and nothing more specific, please use the "Other" subcategory.
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              categories:
+                type: array
+                items:
+                  $ref: ../schemas/parent_category.yaml

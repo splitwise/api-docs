@@ -1,0 +1,63 @@
+---
+post:
+  tags:
+  - groups
+  summary: Create a group
+  description: |
+    Creates a new group. Adds the current user to the group by default.
+
+    **Note**: group user parameters must be flattened into the format `users__{index}__{property}`, where
+    `property` is `user_id`, `first_name`, `last_name`, or `email`.
+    The user's email or ID must be provided.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          properties:
+            name:
+              type: string
+            group_type:
+              type: string
+              description: What is the group used for?
+              enum: [apartment, house, trip, other]
+            simplify_by_default:
+              type: boolean
+              description: Turn on simplify debts?
+          additionalProperties:
+            type: string
+            x-additionalPropertiesName: users__{index}__{property}
+          example:
+            name: The Brain Trust
+            group_type: trip
+            users__0__first_name: Alan
+            users__0__last_name: Turing
+            users__0__email: alan@example.org
+            users__1__id: 5823
+          required:
+          - name
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              group:
+                "$ref": "../schemas/group.yaml"
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: object
+                properties:
+                  base:
+                    type: array
+                    items:
+                      type: string
+                      example: You cannot add unknown users to a group by user_id

@@ -1,0 +1,29 @@
+---
+get:
+  tags:
+  - other
+  summary: Supported currencies
+  security: []
+  description: |
+    Returns a list of all currencies allowed by the system. These are mostly ISO 4217 codes, but we do
+    sometimes use pending codes or unofficial, colloquial codes (like BTC instead of XBT for Bitcoin).
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              currencies:
+                type: array
+                items:
+                  type: object
+                  title: Currency
+                  properties:
+                    currency_code:
+                      type: string
+                      example: BRL
+                    unit:
+                      type: string
+                      example: R$

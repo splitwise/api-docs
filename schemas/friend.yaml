@@ -1,0 +1,23 @@
+allOf:
+- $ref: ./user.yaml
+- type: object
+  properties:
+    groups:
+      type: array
+      items:
+        type: object
+        properties:
+          group_id:
+            type: integer
+            example: 571
+          balance:
+            type: array
+            items:
+              $ref: ./balance.yaml
+    balance:
+      type: array
+      items:
+        $ref: ./balance.yaml
+    updated_at:
+      type: string
+      format: date-time

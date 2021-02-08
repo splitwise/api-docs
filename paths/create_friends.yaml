@@ -1,0 +1,67 @@
+---
+post:
+  tags:
+  - friends
+  summary: Add friends
+  description: |
+    Add multiple friends at once.
+
+    For each user, if the other user does not exist, you must supply `friends__{index}__first_name`.
+
+    **Note**: user parameters must be flattened into the format `friends__{index}__{property}`, where
+    `property` is `first_name`, `last_name`, or `email`.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties:
+            type: string
+            x-additionalPropertiesName: friends__{index}__{property}
+        example:
+          friends__0__first_name: Alan
+          friends__0__last_name: Turing
+          friends__0__email: alan@example.org
+          friends__1__email: existing_user@example.com
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              users:
+                type: array
+                items:
+                  allOf:
+                  - "$ref": "../schemas/friend.yaml"
+                  - title: User
+              errors:
+                type: array
+                example: []
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              users:
+                type: array
+                example: []
+              errors:
+                type: object
+                additionalProperties:
+                  type: array
+                example:
+                  base:
+                  - Please supply a name for this user
+        example:
+          users: []
+          errors:
+            base:
+            - That user cannot be a member of this group
+    '401':
+      "$ref": "../responses/unauthorized.yaml"

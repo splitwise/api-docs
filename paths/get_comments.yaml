@@ -1,0 +1,30 @@
+---
+get:
+  tags:
+  - comments
+  summary: Get expense comments
+  parameters:
+  - in: query
+    name: expense_id
+    schema:
+      type: integer
+    required: true
+    example: 4193
+  responses:
+    '200':
+      description: 'OK'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              comments:
+                type: array
+                items:
+                  $ref: ../schemas/comment.yaml
+    '401':
+      $ref: ../responses/unauthorized.yaml
+    '403':
+      $ref: ../responses/forbidden.yaml
+    '404':
+      $ref: ../responses/not_found.yaml

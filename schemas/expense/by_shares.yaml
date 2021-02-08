@@ -1,0 +1,38 @@
+allOf:
+- $ref: ./common.yaml
+- type: object
+  properties:
+    users__0__user_id:
+      type: integer
+      example: 54123
+    users__0__paid_share:
+      type: string
+      example: "25"
+      description: Decimal amount as a string with 2 decimal places. The amount this user paid for the expense
+    users__0__owed_share:
+      type: string
+      example: "13.55"
+      description: Decimal amount as a string with 2 decimal places. The amount this user owes for the expense
+    users__1__first_name:
+      type: string
+      example: "Neu"
+    users__1__last_name:
+      type: string
+      example: "Yewzer"
+    users__1__email:
+      type: string
+      example: "neuyewxyz@example.com"
+    users__1__paid_share:
+      type: string
+      example: "0"
+      description: Decimal amount as a string with 2 decimal places. The amount this user paid for the expense
+    users__1__owed_share:
+      type: string
+      example: "11.45"
+      description: Decimal amount as a string with 2 decimal places. The amount this user owes for the expense
+  additionalProperties:
+    x-additionalPropertiesName: users__{index}__{property}
+    type: string
+- required:
+  - group_id
+    

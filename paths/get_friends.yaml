@@ -1,0 +1,22 @@
+---
+get:
+  tags:
+  - friends
+  summary: List current user's friends
+  description: "**Note**: `group` objects only include group balances with that friend.\n"
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              friends:
+                type: array
+                items:
+                  allOf:
+                  - "$ref": "../schemas/friend.yaml"
+                  - title: User
+    '401':
+      "$ref": "../responses/unauthorized.yaml"

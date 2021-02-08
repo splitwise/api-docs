@@ -1,0 +1,45 @@
+---
+post:
+  tags:
+  - comments
+  summary: Create a comment
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            expense_id:
+              type: integer
+              example: 5123
+            content:
+              type: string
+              example: "Does this include the delivery fee?"
+  responses:
+    '200':
+      description: 'OK'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              comment:
+                allOf:
+                - $ref: ../schemas/comment.yaml
+                - type: object
+                  properties:
+                    relation_id:
+                      example: 5123
+                    comment_type:
+                      example: "User"
+                    content:
+                      example: "Does this include the delivery fee?"
+                    user:
+                      $ref: ../schemas/comment_user.yaml
+    '401':
+      $ref: ../responses/unauthorized.yaml
+    '403':
+      $ref: ../responses/forbidden.yaml
+    '404':
+      $ref: ../responses/not_found.yaml

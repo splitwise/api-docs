@@ -1,0 +1,37 @@
+---
+post:
+  params:
+  - in: path
+    name: id
+    schema:
+      type: integer
+    required: true
+  tags:
+  - comments
+  summary: Delete a comment
+  description: Deletes a comment. Returns the deleted comment.
+  responses:
+    '200':
+      description: 'OK'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              comment:
+                allOf:
+                - $ref: ../schemas/comment.yaml
+                - type: object
+                  properties:
+                    comment_type:
+                      example: "User"
+                    content:
+                      example: "Does this include the delivery fee?"
+                    user:
+                      $ref: ../schemas/comment_user.yaml
+    '401':
+      $ref: ../responses/unauthorized.yaml
+    '403':
+      $ref: ../responses/forbidden.yaml
+    '404':
+      $ref: ../responses/not_found.yaml

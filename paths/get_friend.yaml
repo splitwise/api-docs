@@ -1,0 +1,28 @@
+---
+parameters:
+- in: path
+  name: id
+  description: User ID of the friend
+  schema:
+    type: integer
+  required: true
+get:
+  tags:
+  - friends
+  summary: Get details about a friend
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              friend:
+                "$ref": "../schemas/friend.yaml"
+    '401':
+      "$ref": "../responses/unauthorized.yaml"
+    '403':
+      "$ref": "../responses/forbidden.yaml"
+    '404':
+      "$ref": "../responses/not_found.yaml"
