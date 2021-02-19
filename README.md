@@ -22,5 +22,5 @@ $ redoc-cli serve splitwise.yaml --watch
 This will create a zero-dependency HTML file at docs/index.html.
 
 ```
-$ redoc-cli bundle splitwise.yaml -o docs/
+$ redoc-cli bundle splitwise.yaml -o docs/index.html
 ```
