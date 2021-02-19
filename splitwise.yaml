@@ -260,7 +260,7 @@ info:
     </ol>
 
 servers:
-  - url: 'https://secure.splitwise.com/api/v3'
+  - url: 'https://secure.splitwise.com/api/v3.0'
     variables: {}
 security:
   - OAuth: []
