@@ -5,8 +5,8 @@ properties:
     example: "25"
     description: A string representation of a decimal value, limited to 2 decimal places
   group_id:
-      type: integer
-      description: The group to put this expense in
+    type: integer
+    description: The group to put this expense in, or `0` to create an expense outside of a group.
   description:
     type: string
     description: A short description of the expense
