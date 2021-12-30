@@ -7,7 +7,9 @@ post:
     Creates an expense. You may either split an expense equally (only with `group_id` provided),
     or supply a list of shares.
 
-    If providing a list of shares, each share must include `paid_share` and `owed_share`, and must be identified by one of the following:
+    When splitting equally, the authenticated user is assumed to be the payer.
+
+    When providing a list of shares, each share must include `paid_share` and `owed_share`, and must be identified by one of the following:
     - `email`, `first_name`, and `last_name`
     - `user_id`
 
