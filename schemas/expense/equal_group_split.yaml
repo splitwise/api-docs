@@ -2,6 +2,9 @@ allOf:
 - $ref: ./common.yaml
 - type: object
   properties:
+    group_id:
+      type: integer
+      description: The group to put this expense in.
     split_equally:
       type: boolean
       enum: [true]
