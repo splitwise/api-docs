@@ -18,11 +18,7 @@ post:
     content:
       application/json:
         schema:
-          oneOf:
-          - "$ref": "../schemas/expense/equal_group_split.yaml"
-            title: Equal group split
-          - "$ref": "../schemas/expense/by_shares.yaml"
-            title: Split by shares
+          "$ref": "../schemas/expense/by_shares.yaml"
   responses:
     '200':
       description: OK
