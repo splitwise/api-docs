@@ -14,13 +14,15 @@ These API docs follow the [OpenAPI v3](https://swagger.io/specification/) specif
 
 ### Developing
 ```
-$ npm install -g redoc-cli
-$ redoc-cli serve splitwise.yaml --watch
+$ npm install
+$ npm run serve
 ```
+
+This will start a local HTTP server that serves the documentation and rebuilds whenever any of the OpenAPI source files are modified.
 
 ### Compiling
 This will create a zero-dependency HTML file at docs/index.html.
 
 ```
-$ redoc-cli bundle splitwise.yaml -o docs/index.html
+$ npm run build
 ```

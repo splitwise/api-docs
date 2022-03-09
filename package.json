@@ -1,0 +1,18 @@
+{
+  "description": "This repo powers the official documentation for the Splitwise API. You can view our official API documentation website at [http://dev.splitwise.com](http://dev.splitwise.com).",
+  "scripts": {
+    "serve": "npx redoc-cli serve splitwise.yaml --watch",
+    "build": "npx redoc-cli bundle splitwise.yaml -o docs/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/splitwise/api-docs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/splitwise/api-docs/issues"
+  },
+  "homepage": "https://github.com/splitwise/api-docs#readme",
+  "devDependencies": {
+    "redoc-cli": "^0.13.8"
+  }
+}
