@@ -32,6 +32,8 @@ info:
       - https://github.com/srthkpthk/splitwise_api
     - Golang
       - https://github.com/anvari1313/splitwise.go
+    - Rust
+      - https://github.com/pbar1/splitwise-rs
 
     If you've built a third-party SDK for Splitwise and you'd like to see it included in this list, then please open a pull request to update this section and add a new link. Thank you for your work!
 
