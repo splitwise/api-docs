@@ -13,7 +13,7 @@ post:
         schema:
           type: object
           properties:
-            email:
+            user_email:
               type: string
               example: ada@example.com
             user_first_name:
