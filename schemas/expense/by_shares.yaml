@@ -39,3 +39,4 @@ allOf:
 - required:
   - group_id
   - description
+  - cost
