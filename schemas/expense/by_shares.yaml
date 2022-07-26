@@ -38,4 +38,5 @@ allOf:
     type: string
 - required:
   - group_id
-    
+  - description
+  - cost

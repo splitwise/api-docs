@@ -11,4 +11,5 @@ allOf:
 - required:
   - group_id
   - split_equally
-    
+  - description
+  - cost
