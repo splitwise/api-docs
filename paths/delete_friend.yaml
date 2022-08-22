@@ -28,6 +28,8 @@ post:
                 type: object
                 additionalProperties:
                   type: array
+                  items:
+                    type: string
           examples:
             Success:
               value:

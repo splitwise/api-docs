@@ -25,6 +25,8 @@ post:
                 type: boolean
               errors:
                 type: array
+                items:
+                  type: string
           examples:
             Success:
               value:
