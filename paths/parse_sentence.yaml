@@ -20,7 +20,6 @@ post:
             properties:
               input:
                 type: string
-                required: true
                 example: "I owe Ada 5 bucks"
                 description: A natural language sentence describing an expense.
               autosave:
@@ -32,7 +31,6 @@ post:
             properties:
               input:
                 type: string
-                required: true
                 example: "I owe Ada 5 bucks"
                 description: A natural language sentence describing an expense.
               friend_id:
@@ -46,7 +44,6 @@ post:
             properties:
               input:
                 type: string
-                required: true
                 example: "I owe Ada 5 bucks"
                 description: A natural language sentence describing an expense.
               group_id:

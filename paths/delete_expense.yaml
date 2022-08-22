@@ -22,9 +22,10 @@ post:
             properties:
               success:
                 type: boolean
-                required: true
               errors:
                 type: object
+            required:
+              - success
           examples:
             Success:
               value:
