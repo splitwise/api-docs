@@ -58,10 +58,10 @@ post:
                 example:
                   base:
                   - Please supply a name for this user
-        example:
-          users: []
-          errors:
-            base:
-            - That user cannot be a member of this group
+            example:
+              users: []
+              errors:
+                base:
+                - That user cannot be a member of this group
     '401':
       "$ref": "../responses/unauthorized.yaml"

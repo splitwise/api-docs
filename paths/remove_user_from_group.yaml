@@ -41,7 +41,7 @@ post:
             Success:
               value:
                 success: true
-                errors: []
+                errors: {}
             Failure:
               value:
                 success: false

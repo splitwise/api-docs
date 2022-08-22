@@ -64,7 +64,7 @@ post:
               value:
                 success: true
                 user: {}
-                errors: []
+                errors: {}
             Failure:
               value:
                 success: false
