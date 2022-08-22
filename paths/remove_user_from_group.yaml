@@ -37,11 +37,13 @@ post:
                 type: object
                 additionalProperties:
                   type: array
+                  items:
+                    type: string
           examples:
             Success:
               value:
                 success: true
-                errors: []
+                errors: {}
             Failure:
               value:
                 success: false

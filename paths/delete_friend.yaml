@@ -1,11 +1,4 @@
 ---
-parameters:
-- in: path
-  name: id
-  description: User ID of the friend
-  schema:
-    type: integer
-  required: true
 post:
   tags:
   - friends
@@ -14,6 +7,13 @@ post:
     Given a friend ID, break off the friendship between the current user and the specified user.
 
     **Note**: 200 OK does not indicate a successful response. You must check the `success` value of the response.
+  parameters:
+  - in: path
+    name: id
+    description: User ID of the friend
+    schema:
+      type: integer
+    required: true
   responses:
     '200':
       description: OK
@@ -28,6 +28,8 @@ post:
                 type: object
                 additionalProperties:
                   type: array
+                  items:
+                    type: string
           examples:
             Success:
               value:

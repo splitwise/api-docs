@@ -1,16 +1,20 @@
 ---
-params:
-- in: query
-  name: id
-  description: ID of the expense to delete
 post:
   tags:
   - expenses
   summary: Delete an expense
   description: "**Note**: 200 OK does not indicate a successful response. The operation
     was successful only if `success` is true.\n"
+  parameters:
+  - in: path
+    name: id
+    description: ID of the expense to delete
+    schema:
+      type: integer
+    required: true
   responses:
     '200':
+      description: OK
       content:
         application/json:
           schema:
@@ -18,9 +22,10 @@ post:
             properties:
               success:
                 type: boolean
-                required: true
               errors:
                 type: object
+            required:
+              - success
           examples:
             Success:
               value:

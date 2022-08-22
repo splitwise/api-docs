@@ -39,8 +39,11 @@ post:
                   - "$ref": "../schemas/friend.yaml"
                   - title: User
               errors:
-                type: array
-                example: []
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
     '400':
       description: Bad Request
       content:
@@ -50,18 +53,24 @@ post:
             properties:
               users:
                 type: array
+                items:
+                  allOf:
+                  - "$ref": "../schemas/friend.yaml"
+                  - title: User
                 example: []
               errors:
                 type: object
                 additionalProperties:
                   type: array
+                  items:
+                    type: string
                 example:
                   base:
                   - Please supply a name for this user
-        example:
-          users: []
-          errors:
-            base:
-            - That user cannot be a member of this group
+            example:
+              users: []
+              errors:
+                base:
+                - That user cannot be a member of this group
     '401':
       "$ref": "../responses/unauthorized.yaml"

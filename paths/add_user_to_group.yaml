@@ -59,12 +59,14 @@ post:
                 type: object
                 additionalProperties:
                   type: array
+                  items:
+                    type: string
           examples:
             Success:
               value:
                 success: true
                 user: {}
-                errors: []
+                errors: {}
             Failure:
               value:
                 success: false

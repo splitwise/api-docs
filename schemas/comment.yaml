@@ -24,4 +24,4 @@ properties:
     format: date-time
     nullable: true
   user:
-    - $ref: ./comment_user.yaml
+    $ref: ./comment_user.yaml

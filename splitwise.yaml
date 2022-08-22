@@ -326,7 +326,7 @@ components:
       $ref: ./responses/unauthorized.yaml
     Forbidden:
       $ref: ./responses/forbidden.yaml
-    Not Found:
+    Not_Found:
       $ref: ./responses/not_found.yaml
   schemas:
     Debt:
