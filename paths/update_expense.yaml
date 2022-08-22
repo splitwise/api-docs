@@ -1,8 +1,4 @@
 ---
-params:
-- in: query
-  name: id
-  description: ID of the expense to update
 post:
   tags:
   - expenses
@@ -13,6 +9,13 @@ post:
     shares for the expense will be overwritten with the provided values.
 
     **Note**: 200 OK does not indicate a successful response. The operation was successful only if `errors` is empty.
+  parameters:
+    - in: path
+      name: id
+      description: ID of the expense to update
+      schema:
+        type: integer
+      required: true
   requestBody:
     required: true
     content:

@@ -47,7 +47,7 @@
   $ref: ./get_comments.yaml
 /create_comment:
   $ref: ./create_comment.yaml
-/delete_comment:
+/delete_comment/{id}:
   $ref: ./delete_comment.yaml
 /get_notifications:
   $ref: ./get_notifications.yaml

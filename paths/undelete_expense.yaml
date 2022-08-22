@@ -1,14 +1,17 @@
 ---
-params:
-- in: query
-  name: id
-  description: ID of the expense to restore
 post:
   tags:
   - expenses
   summary: Restore an expense
   description: "**Note**: 200 OK does not indicate a successful response. The operation
     was successful only if `success` is true.\n"
+  parameters:
+  - in: path
+    name: id
+    description: ID of the expense to restore
+    schema:
+      type: integer
+    required: true
   responses:
     '200':
       content:
