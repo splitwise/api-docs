@@ -9,6 +9,9 @@ get:
       content:
         application/json:
           schema:
-            "$ref": "../schemas/current_user.yaml"
+            type: object
+            properties:
+              user:
+                "$ref": "../schemas/current_user.yaml"
     '401':
       "$ref": "../responses/unauthorized.yaml"
