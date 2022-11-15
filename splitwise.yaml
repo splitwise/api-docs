@@ -32,6 +32,7 @@ info:
       - https://github.com/srthkpthk/splitwise_api
     - Golang
       - https://github.com/anvari1313/splitwise.go
+      - https://github.com/aanzolaavila/splitwise.go
     - Rust
       - https://github.com/pbar1/splitwise-rs
 
