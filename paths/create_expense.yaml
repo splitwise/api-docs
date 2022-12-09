@@ -38,6 +38,21 @@ post:
                   "$ref": "../schemas/expense.yaml"
               errors:
                 type: object
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: object
+                properties:
+                  base:
+                    type: array
+                    items:
+                      type: string
+                      example: "Unrecognized parameter `bad_parameter`"
     '401':
       "$ref": "../responses/unauthorized.yaml"
     '403':
