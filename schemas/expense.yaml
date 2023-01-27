@@ -4,6 +4,7 @@ allOf:
     properties:
       id:
         type: integer
+        format: int64
         example: 51023
       group_id:
         type: integer
