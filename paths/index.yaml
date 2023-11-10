@@ -53,5 +53,3 @@
   $ref: ./get_notifications.yaml
 /get_categories:
   $ref: ./get_categories.yaml
-/parse_sentence:
-  $ref: ./parse_sentence.yaml
