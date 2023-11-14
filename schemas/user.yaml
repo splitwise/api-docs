@@ -23,3 +23,6 @@ properties:
         type: string
       large:
         type: string
+  custom_picture:
+    type: bool
+    example: false

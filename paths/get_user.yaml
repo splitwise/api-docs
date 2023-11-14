@@ -15,7 +15,10 @@ get:
       content:
         application/json:
           schema:
-            "$ref": "../schemas/user.yaml"
+            type: object
+            properties:
+              user:
+                "$ref": "../schemas/user.yaml"
     '401':
       "$ref": "../responses/unauthorized.yaml"
     '403':
