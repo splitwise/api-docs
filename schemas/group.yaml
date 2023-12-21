@@ -8,8 +8,12 @@ properties:
     example: "Housemates 2020"
   group_type:
     type: string
-    enum: [apartment, house, trip, other]
-    example: "apartment"
+    enum: [home, trip, couple, other, apartment, house]
+    example: "home"
+    description: |
+      What is the group used for?
+
+      **Note**: It is recommended to use `home` in place of `house` or `apartment`.
   updated_at:
     type: string
     format: date-time

@@ -19,8 +19,12 @@ post:
               type: string
             group_type:
               type: string
-              description: What is the group used for?
-              enum: [apartment, house, trip, other]
+              enum: [home, trip, couple, other, apartment, house]
+              example: "home"
+              description: |
+                What is the group used for?
+
+                **Note**: It is recommended to use `home` in place of `house` or `apartment`.
             simplify_by_default:
               type: boolean
               description: Turn on simplify debts?

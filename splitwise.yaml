@@ -277,7 +277,7 @@ tags:
   - name: groups
     x-displayName: Groups
     description:
-      A Group represents a collection of users who share expenses together. For example, some users use a Group to aggregate expenses related to an apartment. Others use it to represent a trip.
+      A Group represents a collection of users who share expenses together. For example, some users use a Group to aggregate expenses related to a home. Others use it to represent a trip.
       Expenses assigned to a group are split among the users of that group.
       Importantly, two users in a Group can also have expenses with one another outside of the Group.
   - name: friends
