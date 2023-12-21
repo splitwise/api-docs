@@ -9,7 +9,7 @@ properties:
   group_type:
     type: string
     enum: [home, trip, couple, other, apartment, house]
-    example: "apartment"
+    example: "home"
     description: |
       What is the group used for?
 
