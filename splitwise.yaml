@@ -10,7 +10,7 @@ info:
     Hey there! We're glad you're interested in the Splitwise API. This documentation will help you to fetch information
     on users, expenses, groups, and much more.
 
-    If something in the API is confusing you, you can open an issue about it on GitHub.
+    If something in the API is confusing you, you can open an issue about it [on GitHub](https://github.com/splitwise/api-docs).
     We're a small team, so we may not have an instant fix, but we'll get back to you as soon as we're able.
     (If you spot an issue in our API documentation itself, feel free to open a pull request to update this website!)
 
