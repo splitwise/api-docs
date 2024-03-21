@@ -8,6 +8,7 @@ properties:
   last_name:
     type: string
     example: "Lovelace"
+    nullable: true
   email:
     type: string
     example: "ada@example.com"
