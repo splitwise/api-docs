@@ -17,23 +17,25 @@ info:
     # Third-Party SDKs
     The development community has built a number of unofficial, third-party SDKs for Splitwise in a variety of different languages.
 
+    - Dart
+      - https://github.com/srthkpthk/splitwise_api
+    - Elixir
+      - https://github.com/matiasdelgado/ex_splitwise
+    - Golang
+      - https://github.com/anvari1313/splitwise.go
+      - https://github.com/aanzolaavila/splitwise.go
+    - Haskell
+      - https://github.com/daniel-beard/splitwise-hs
+    - Java
+      - https://github.com/sritejakv/splitwise-java
     - Javascript
       - https://github.com/keriwarr/splitwise
       - https://github.com/Bearer/Pizzly
       - https://github.com/athulanilthomas/splitwise-ts
-    - Ruby
-      - https://github.com/divyum/splitwise-ruby
     - Python
       - https://github.com/namaggarwal/splitwise
-    - Elixir
-      - https://github.com/matiasdelgado/ex_splitwise
-    - Java
-      - https://github.com/sritejakv/splitwise-java
-    - Dart
-      - https://github.com/srthkpthk/splitwise_api
-    - Golang
-      - https://github.com/anvari1313/splitwise.go
-      - https://github.com/aanzolaavila/splitwise.go
+    - Ruby
+      - https://github.com/divyum/splitwise-ruby
     - Rust
       - https://github.com/pbar1/splitwise-rs
 
