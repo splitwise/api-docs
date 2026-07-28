@@ -272,6 +272,20 @@ info:
       </li>
     </ol>
 
+    # Rate Limits
+
+    The Splitwise API is rate-limited to protect the stability of our service for all users. Rate limits vary by
+    endpoint and resource, and are subject to change at any time without notice.
+
+    If you make too many requests in a short period, the API will respond with an `HTTP 429 Too Many Requests`
+    status code. When you receive a `429`, you should slow down the rate at which you're making requests and retry
+    after a short delay.
+
+    In practice, our rate limits are fairly lenient, and almost no hobby integration has ever exceeded them. If you're
+    building a non-commercial plugin or personal project, you're very unlikely to run into these limits under normal
+    use. If you have a use case that requires higher limits, or you're building a commercial integration, please reach
+    out to us at developers@splitwise.com to discuss your needs.
+
 servers:
   - url: 'https://secure.splitwise.com/api/v3.0'
     variables: {}
